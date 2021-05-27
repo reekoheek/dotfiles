@@ -1,0 +1,133 @@
+set nocompatible
+
+set history=500
+set mouse=a
+set ttyfast
+set lazyredraw
+set timeoutlen=1000
+set ttimeoutlen=0
+set noerrorbells
+set visualbell
+
+set title
+set relativenumber
+set number
+set cursorline
+set scrolloff=3
+set colorcolumn=80,120
+set signcolumn=yes
+
+set nowrap
+set encoding=utf-8 nobomb
+set nostartofline
+
+set autoread
+set nobackup
+set nowb
+set noswapfile
+set hidden
+
+set backspace=indent,eol,start
+set autoindent
+set smartindent
+
+"set listchars=tab:>·,trail:~,space:·
+set listchars=tab:▸·,trail:~,space:·
+set list
+
+set hlsearch
+set incsearch
+set wildmenu
+set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.psd
+set wildignore+=*.pdf
+set wildignore+=.DS_Store
+set wildignore+=.git/*,node_modules/*,bower_components/*
+set synmaxcol=2500
+
+set t_Co=256
+set background=dark
+set termguicolors
+set noshowmode
+set showtabline=2
+set guioptions-=e
+set laststatus=2
+
+" Use system clipboard -  http://vim.wikia.com/wiki/Accessing_the_system_clipboard
+"set clipboard=unnamedplus " for linux
+set clipboard=unnamed " for macOS
+
+filetype plugin indent on
+syntax on
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'gruvbox-community/gruvbox'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'mattn/emmet-vim'
+Plug 'jonsmithers/vim-html-template-literals'
+Plug 'pangloss/vim-javascript'
+Plug 'tpope/vim-surround'
+
+call plug#end()
+
+augroup theme
+	autocmd!
+	autocmd VimEnter * ++nested colorscheme gruvbox
+	autocmd VimEnter * ++nested highlight Normal guibg=NONE ctermbg=NONE
+augroup end
+
+"let g:gruvbox_transparent_bg = 1
+"let g:gruvbox_contrast_dark = 'hard'
+
+let g:netrw_banner = 0
+let g:netrw_winsize = 30
+let g:netrw_liststyle = 3
+let g:netrw_dirhistmax = 0
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+
+let g:lightline = {
+	\ 'colorscheme': 'gruvbox',
+	\ 'tabline': {'left': [['buffers']], 'right': [['']]},
+	\ 'component_expand': {'buffers': 'lightline#bufferline#buffers'},
+	\ 'component_type': {'buffers': 'tabsel'}
+	\ }
+let g:lightline.separator = {'left': '', 'right': ''}
+let g:lightline.subseparator = {'left': '', 'right': ''}
+let g:lightline#bufferline#show_number = 1
+let g:lightline#bufferline#unnamed = '[noname]'
+
+let mapleader=','
+
+map Y y$
+
+noremap <up> <nop>
+noremap <down> <nop>
+noremap <left> <nop>
+noremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+
+nnoremap <C-j> :m .+1<CR>==
+nnoremap <C-k> :m .-2<CR>==
+inoremap <C-j> <Esc>:m .+1<CR>==gi
+inoremap <C-k> <Esc>:m .-2<CR>==gi
+vnoremap <C-j> :m '>+1<CR>gv=gv
+vnoremap <C-k> :m '<-2<CR>gv=gv
+
+nnoremap <Leader>p :Files<CR>
+nnoremap <Leader>b :Lex!<CR>
+nnoremap <Leader>w :w<CR>
+inoremap <Leader>w <ESC>:w<CR>
+inoremap <Leader>q <ESC>:q!<CR>
+nnoremap <Leader>q :q!<CR>
+nnoremap <C-L> :nohl<CR><C-L>
+nnoremap g/ :%s//g<Left><Left>
