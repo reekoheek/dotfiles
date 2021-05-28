@@ -7,7 +7,6 @@ set lazyredraw
 set timeoutlen=1000
 set ttimeoutlen=0
 set noerrorbells
-set visualbell
 
 set title
 set relativenumber
@@ -31,7 +30,6 @@ set backspace=indent,eol,start
 set autoindent
 set smartindent
 
-"set listchars=tab:>·,trail:~,space:·
 set listchars=tab:▸·,trail:~,space:·
 set list
 
@@ -46,7 +44,7 @@ set synmaxcol=2500
 
 set t_Co=256
 set background=dark
-set termguicolors
+"set termguicolors
 set noshowmode
 set showtabline=2
 set guioptions-=e

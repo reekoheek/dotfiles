@@ -13,15 +13,17 @@ shopt -s histappend # append to bash history file, rather than overwriting it
 
 # BREW
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
+if [ -f "`which brew`" ] && [ -f $(brew --prefix)/etc/bash_completion ]; then
 	source $(brew --prefix)/etc/bash_completion
 fi
 
 #--- ANDROID
 
-export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH
+if [ -d "$HOME/Library" ]; then
+	export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+	export ANDROID_HOME=$HOME/Library/Android/sdk
+	export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH
+fi
 
 #--- DOCKER
 
@@ -30,19 +32,21 @@ export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH
 
 #--- FLUTTER
 
-export PATH="$PATH:$HOME/opt/flutter/bin"
+[ -d "$HOME/opt/flutter" ] && export PATH="$PATH:$HOME/opt/flutter/bin"
 
 #--- FZF
 
-if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
-	export PATH="${PATH:+${PATH}:}/usr/local/opt/fzf/bin"
+if [ -d "$HOME/Library" ]; then
+	if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
+		export PATH="${PATH:+${PATH}:}/usr/local/opt/fzf/bin"
+	fi
+
+	[[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.bash" 2> /dev/null
+
+	source "/usr/local/opt/fzf/shell/key-bindings.bash"
 fi
 
-[[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.bash" 2> /dev/null
-
-source "/usr/local/opt/fzf/shell/key-bindings.bash"
-
-export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 #--- GIT
@@ -58,20 +62,22 @@ export PATH=$PATH:$GOPATH/bin
 
 #--- JAVA
 
-if [ -s "$HOME/.jenv" ]; then
+if [ -d "$HOME/.jenv" ]; then
 	export PATH="$HOME/.jenv/bin:$PATH"
 	eval "$(jenv init -)"
 fi
 
 #--- NODE.JS
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" --no-use # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [ -d "$HOME/.nvm" ]; then
+	export NVM_DIR="$HOME/.nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" --no-use # This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
 
 #--- RUST
 
-export PATH="$HOME/.cargo/bin:$PATH"
+[ -d "$HOME/.cargo" ] && export PATH="$HOME/.cargo/bin:$PATH"
 
 #--- STARSHIP
 
