@@ -6,6 +6,7 @@ alias htop='sudo htop'
 alias mtr='sudo mtr'
 alias grep='grep --color=auto'
 alias ducks='du -cks * | sort -rn | head'
+alias v=nvim
 
 export LC_ALL=en_US.UTF-8
 
