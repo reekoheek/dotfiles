@@ -44,10 +44,10 @@ set wildignore+=.git/*,node_modules/*,bower_components/*
 set synmaxcol=2500
 
 set t_Co=256
-set background=dark
-set termguicolors
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+set background=dark
 set noshowmode
 set showtabline=2
 set guioptions-=e
@@ -63,31 +63,34 @@ syntax on
 call plug#begin('~/.vim/plugged')
 
 Plug 'gruvbox-community/gruvbox'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'itchyny/lightline.vim'
+Plug 'shinchu/lightline-gruvbox.vim'
+"Plug 'nathanaelkane/vim-indent-guides'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
-Plug 'shinchu/lightline-gruvbox.vim'
-Plug 'mattn/emmet-vim'
-Plug 'jonsmithers/vim-html-template-literals'
-Plug 'pangloss/vim-javascript'
 Plug 'tpope/vim-surround'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'dense-analysis/ale'
+Plug 'mattn/emmet-vim'
+Plug 'pangloss/vim-javascript'
+Plug 'jonsmithers/vim-html-template-literals'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
+
+colorscheme gruvbox
+hi Normal guibg=NONE ctermbg=NONE
 
 augroup theme
 	autocmd!
 	autocmd VimEnter * ++nested colorscheme gruvbox
-	autocmd VimEnter * ++nested highlight Normal guibg=NONE ctermbg=NONE
+	autocmd VimEnter * ++nested hi Normal guibg=NONE ctermbg=NONE
 augroup end
 
-"let g:gruvbox_transparent_bg = 1
-"let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_transparent_bg = 1
+let g:gruvbox_contrast_dark = 'hard'
 
 let g:netrw_banner = 0
 let g:netrw_winsize = 30
@@ -144,3 +147,6 @@ inoremap <Leader>q <ESC>:q!<CR>
 nnoremap <Leader>q :q!<CR>
 nnoremap <C-L> :let @/ = ""<CR>:nohl<CR><C-L>
 nnoremap g/ :%s//g<Left><Left>
+
+noremap [a :ALEPreviousWrap<CR>
+noremap ]a :ALENextWrap<CR>
