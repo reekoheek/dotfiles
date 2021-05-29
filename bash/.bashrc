@@ -88,3 +88,6 @@ eval "$(starship init bash)"
 
 eval "$(zoxide init bash)"
 
+#--- BAT
+
+export BAT_THEME=gruvbox-dark
