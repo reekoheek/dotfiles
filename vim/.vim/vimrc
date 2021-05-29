@@ -14,7 +14,7 @@ set number
 set cursorline
 set scrolloff=3
 set colorcolumn=80,120
-set signcolumn=yes
+"set signcolumn=yes
 
 set nowrap
 set encoding=utf-8 nobomb
@@ -75,6 +75,8 @@ Plug 'jonsmithers/vim-html-template-literals'
 Plug 'pangloss/vim-javascript'
 Plug 'tpope/vim-surround'
 Plug 'nathanaelkane/vim-indent-guides'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'dense-analysis/ale'
 
 call plug#end()
 
@@ -107,6 +109,12 @@ let g:lightline#bufferline#unnamed = '[noname]'
 
 let g:indent_guides_enable_on_vim_startup = 1
 
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1 " Status line types/signatures.
+
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '●'
+
 let mapleader=','
 
 map Y y$
@@ -134,5 +142,5 @@ nnoremap <Leader>w :w<CR>
 inoremap <Leader>w <ESC>:w<CR>
 inoremap <Leader>q <ESC>:q!<CR>
 nnoremap <Leader>q :q!<CR>
-nnoremap <C-L> :nohl<CR><C-L>
+nnoremap <C-L> :let @/ = ""<CR>:nohl<CR><C-L>
 nnoremap g/ :%s//g<Left><Left>
