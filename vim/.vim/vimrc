@@ -14,7 +14,7 @@ set number
 set cursorline
 set scrolloff=3
 set colorcolumn=80,120
-"set signcolumn=yes
+set signcolumn=yes
 
 set nowrap
 set encoding=utf-8 nobomb
