@@ -10,6 +10,8 @@ alias v=nvim
 
 export LC_ALL=en_US.UTF-8
 
+[ -d "$HOME/bin" ] && export PATH="$PATH:$HOME/bin"
+
 shopt -s histappend # append to bash history file, rather than overwriting it
 
 # BREW

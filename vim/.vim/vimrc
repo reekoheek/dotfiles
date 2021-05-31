@@ -1,3 +1,6 @@
+"" General
+""----------------------------------------------------------------------------
+
 set nocompatible
 
 set history=500
@@ -11,7 +14,7 @@ set noerrorbells
 set title
 set relativenumber
 set number
-set cursorline
+"set cursorline
 set scrolloff=3
 set colorcolumn=80,120
 set signcolumn=yes
@@ -30,7 +33,6 @@ set backspace=indent,eol,start
 set autoindent
 set smartindent
 
-"set listchars=tab:▸\ ,trail:·
 set listchars=tab:▸·,trail:~,space:·
 set list
 
@@ -43,11 +45,12 @@ set wildignore+=.DS_Store
 set wildignore+=.git/*,node_modules/*,bower_components/*
 set synmaxcol=2500
 
-set t_Co=256
+" set t_Co=256 " is a bad idea, set your terminal up properly instead.
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 set background=dark
+set showmatch
 set noshowmode
 set showtabline=2
 set guioptions-=e
@@ -59,6 +62,10 @@ set clipboard=unnamed " for macOS
 
 filetype plugin indent on
 syntax on
+
+if !has('nvim')
+	packadd! matchit
+endif
 
 call plug#begin('~/.vim/plugged')
 
@@ -77,6 +84,7 @@ Plug 'mattn/emmet-vim'
 Plug 'pangloss/vim-javascript'
 Plug 'jonsmithers/vim-html-template-literals'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'airblade/vim-gitgutter'
 
 call plug#end()
 
@@ -118,35 +126,60 @@ let g:go_auto_type_info = 1 " Status line types/signatures.
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '●'
 
+"" Bind keys
+""----------------------------------------------------------------------------
+
 let mapleader=','
 
-map Y y$
+nnoremap Y y$
 
-"noremap <up> <nop>
-"noremap <down> <nop>
-"noremap <left> <nop>
-"noremap <right> <nop>
-"inoremap <up> <nop>
-"inoremap <down> <nop>
-"inoremap <left> <nop>
-"inoremap <right> <nop>
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+inoremap <Up> <Nop>
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
 
-nnoremap <C-j> :m .+1<CR>==
-nnoremap <C-k> :m .-2<CR>==
-inoremap <C-j> <Esc>:m .+1<CR>==gi
-inoremap <C-k> <Esc>:m .-2<CR>==gi
-vnoremap <C-j> :m '>+1<CR>gv=gv
-vnoremap <C-k> :m '<-2<CR>gv=gv
+nnoremap <silent> <C-J> :<C-U>m .+1<CR>==
+nnoremap <silent> <C-K> :<C-U>m .-2<CR>==
+inoremap <silent> <C-J> <Esc>:m .+1<CR>==gi
+inoremap <silent> <C-K> <Esc>:m .-2<CR>==gi
+vnoremap <silent> <C-J> :m '>+1<CR>gv=gv
+vnoremap <silent> <C-K> :m '<-2<CR>gv=gv
 
-nnoremap <Leader>p :Files<CR>
-nnoremap <Leader>b :Buffers<CR>
-nnoremap <Leader>e :Lex!<CR>
-nnoremap <Leader>w :w<CR>
-inoremap <Leader>w <ESC>:w<CR>
-inoremap <Leader>q <ESC>:q!<CR>
-nnoremap <Leader>q :q!<CR>
-nnoremap <C-L> :let @/ = ""<CR>:nohl<CR><C-L>
-nnoremap g/ :%s//g<Left><Left>
+nnoremap <silent> <Leader>p :<C-U>Files<CR>
+nnoremap <silent> <Leader>b :<C-U>Buffers<CR>
+nnoremap <silent> <Leader>e :<C-U>Lex!<CR>
+nnoremap <silent> <Leader>w :<C-U>w<CR>
+inoremap <silent> <Leader>w <ESC>:w<CR>
+inoremap <silent> <Leader>q <ESC>:q!<CR>
+nnoremap <silent> <Leader>q :<C-U>q!<CR>
 
-noremap [a :ALEPreviousWrap<CR>
-noremap ]a :ALENextWrap<CR>
+nnoremap <silent> <C-L> :<C-U>let @/ = "" <Bar> nohl<CR><C-L>
+
+nnoremap g/ :<C-U>%s//g<Left><Left>
+
+function! ChangeBuffer(count) abort
+	if a:count ==# 0
+		silent! execute 'bnext'
+	else
+		silent! execute 'buffer ' . a:count
+	endif
+endfunction
+
+command! -nargs=1 ChangeBufferCmd call ChangeBuffer(<args>)
+nnoremap <silent> gb :<C-U>ChangeBufferCmd(v:count)<CR>
+nnoremap <silent> gB :<C-U>bprev<CR>
+
+nnoremap <silent> [a :<C-U>ALEPreviousWrap<CR>
+nnoremap <silent> ]a :<C-U>ALENextWrap<CR>
+
+imap <C-C> <ESC>
+
+augroup CursorOnInsert
+	autocmd!
+	autocmd InsertEnter * set cursorline
+	autocmd InsertLeave * set nocursorline
+augroup end

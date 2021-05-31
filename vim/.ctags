@@ -3,6 +3,7 @@
 --exclude=node_modules
 --exclude=log
 --exclude=tmp
+--exclude=www
 
 --langmap=javascript:.js.es6.es.jsx.mjs
 --javascript-kinds=-c-f-m-p-v
