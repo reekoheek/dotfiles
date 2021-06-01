@@ -6,6 +6,7 @@
 	c = commit -a
 	t = tag
 	amend = commit --amend
+	co = checkout
 	ps = push
 	pt = push --tags
 	pl = pull
