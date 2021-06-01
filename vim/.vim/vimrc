@@ -79,8 +79,7 @@ Plug 'gruvbox-community/gruvbox'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
-"Plug 'nathanaelkane/vim-indent-guides'
-"
+
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
@@ -137,8 +136,11 @@ let g:go_auto_type_info = 1 " Status line types/signatures.
 
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '●'
+let g:ale_linters = {}
+let g:ale_linters.typescript = ['eslint', 'tsserver']
 
 let g:indentLine_char = '▏'
+let g:indentLine_setConceal = 0
 
 "" Bind keys
 ""----------------------------------------------------------------------------
