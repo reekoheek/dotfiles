@@ -33,7 +33,8 @@ set backspace=indent,eol,start
 set autoindent
 set smartindent
 
-set listchars=tab:▸·,trail:~,space:·
+set listchars=tab:▏\ ,trail:·
+"set listchars=tab:▏·,space:·
 set list
 
 set hlsearch
@@ -57,8 +58,12 @@ set guioptions-=e
 set laststatus=2
 
 " Use system clipboard -  http://vim.wikia.com/wiki/Accessing_the_system_clipboard
-"set clipboard=unnamedplus " for linux
-set clipboard=unnamed " for macOS
+let uname = substitute(system('uname'), '\n', '', '')
+if uname == 'Darwin'
+	set clipboard=unnamed " for macOS
+elseif uname == 'Linux'
+	set clipboard=unnamedplus " for linux
+endif
 
 filetype plugin indent on
 syntax on
@@ -70,21 +75,30 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'gruvbox-community/gruvbox'
+
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
 "Plug 'nathanaelkane/vim-indent-guides'
-Plug 'editorconfig/editorconfig-vim'
+"
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
-Plug 'tpope/vim-surround'
-Plug 'dense-analysis/ale'
+
+Plug 'editorconfig/editorconfig-vim'
 Plug 'mattn/emmet-vim'
+Plug 'tpope/vim-surround'
+Plug 'airblade/vim-gitgutter'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'junegunn/vim-easy-align', {'on': '<plug>(LiveEasyAlign)'}
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'Yggdroot/indentLine'
+
+Plug 'dense-analysis/ale'
 Plug 'pangloss/vim-javascript'
 Plug 'jonsmithers/vim-html-template-literals'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'airblade/vim-gitgutter'
 
 call plug#end()
 
@@ -118,13 +132,13 @@ let g:lightline.subseparator = {'left': '', 'right': ''}
 let g:lightline#bufferline#show_number = 1
 let g:lightline#bufferline#unnamed = '[noname]'
 
-let g:indent_guides_enable_on_vim_startup = 1
-
 let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1 " Status line types/signatures.
 
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '●'
+
+let g:indentLine_char = '▏'
 
 "" Bind keys
 ""----------------------------------------------------------------------------
