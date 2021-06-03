@@ -57,6 +57,8 @@ set showtabline=2
 set guioptions-=e
 set laststatus=2
 
+let mapleader=','
+
 " Use system clipboard -  http://vim.wikia.com/wiki/Accessing_the_system_clipboard
 let uname = substitute(system('uname'), '\n', '', '')
 if uname == 'Darwin'
@@ -68,6 +70,10 @@ endif
 filetype plugin indent on
 syntax on
 
+"" Plugins
+""----------------------------------------------------------------------------
+
+set nocompatible
 if !has('nvim')
 	packadd! matchit
 endif
@@ -101,6 +107,10 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
 
+"" Custom configuration
+""----------------------------------------------------------------------------
+
+set nocompatible
 colorscheme gruvbox
 hi Normal guibg=NONE ctermbg=NONE
 
@@ -109,6 +119,25 @@ augroup theme
 	autocmd VimEnter * ++nested colorscheme gruvbox
 	autocmd VimEnter * ++nested hi Normal guibg=NONE ctermbg=NONE
 augroup end
+
+augroup CursorOnInsert
+	autocmd!
+	autocmd InsertEnter * set cursorline
+	autocmd InsertLeave * set nocursorline
+augroup end
+
+function! ChangeBuffer(count) abort
+	if a:count ==# 0
+		silent! execute 'bnext'
+	else
+		silent! execute 'buffer ' . a:count
+	endif
+endfunction
+
+command! -nargs=1 ChangeBufferCmd call ChangeBuffer(<args>)
+
+"" Plugins configuration
+""----------------------------------------------------------------------------
 
 let g:gruvbox_transparent_bg = 1
 let g:gruvbox_contrast_dark = 'hard'
@@ -138,17 +167,17 @@ let g:ale_sign_error = '●'
 let g:ale_sign_warning = '●'
 let g:ale_linters = {}
 let g:ale_linters.typescript = ['eslint', 'tsserver']
+let g:ale_completion_enabled = 1
+set omnifunc=ale#completion#OmniFunc
 
 let g:indentLine_char = '▏'
-let g:indentLine_setConceal = 0
 
 "" Bind keys
 ""----------------------------------------------------------------------------
 
-let mapleader=','
-
 nnoremap Y y$
 
+imap <C-C> <ESC>
 noremap <Up> <Nop>
 noremap <Down> <Nop>
 noremap <Left> <Nop>
@@ -177,25 +206,10 @@ nnoremap <silent> <C-L> :<C-U>let @/ = "" <Bar> nohl<CR><C-L>
 
 nnoremap g/ :<C-U>%s//g<Left><Left>
 
-function! ChangeBuffer(count) abort
-	if a:count ==# 0
-		silent! execute 'bnext'
-	else
-		silent! execute 'buffer ' . a:count
-	endif
-endfunction
-
-command! -nargs=1 ChangeBufferCmd call ChangeBuffer(<args>)
 nnoremap <silent> gb :<C-U>ChangeBufferCmd(v:count)<CR>
 nnoremap <silent> gB :<C-U>bprev<CR>
 
 nnoremap <silent> [a :<C-U>ALEPreviousWrap<CR>
 nnoremap <silent> ]a :<C-U>ALENextWrap<CR>
+nnoremap <silent> <C-]> :<C-U>ALEGoToDefinition<CR>
 
-imap <C-C> <ESC>
-
-augroup CursorOnInsert
-	autocmd!
-	autocmd InsertEnter * set cursorline
-	autocmd InsertLeave * set nocursorline
-augroup end
