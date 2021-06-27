@@ -1,0 +1,12 @@
+{
+	"explorer.icon.enableNerdfont": true,
+	"explorer.toggle": true,
+	"explorer.quitOnOpen": true,
+	"explorer.keyMappings.global": {
+		"<cr>": ["wait", "expandable?", ["expanded?", "collapse", "expand"], "open"]
+	},
+	"explorer.previewAction.onHover": "content",
+	"diagnostic.errorSign": "●",
+	"diagnostic.warningSign": "●",
+	"diagnostic.infoSign": "●"
+}

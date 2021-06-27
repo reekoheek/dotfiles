@@ -4,6 +4,7 @@
 	a = add .
 	s = status
 	c = commit -a
+	co = checkout
 	t = tag
 	amend = commit --amend
 	co = checkout

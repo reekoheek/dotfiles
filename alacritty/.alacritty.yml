@@ -116,4 +116,10 @@ custom_cursor_colors: true
 
 mouse:
   hide_when_typing: true
+
+cursor:
+  style:
+    shape: Block
+    blinking: Always
+  blink_interval: 500
 # vim: ft=yaml ts=2 sw=2 et

@@ -13,6 +13,8 @@ LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8
 LC_CTYPE=
 
+export COLORTERM=truecolor
+
 [ -d "$HOME/bin" ] && export PATH="$PATH:$HOME/bin"
 
 shopt -s histappend # append to bash history file, rather than overwriting it
