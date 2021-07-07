@@ -1,7 +1,8 @@
 #--- SYSTEM
 
 alias ls='ls -G'
-alias ll='ls -la'
+alias ll='ls -l'
+alias la='ls -la'
 alias htop='sudo htop'
 alias mtr='sudo mtr'
 alias grep='grep --color=auto'
@@ -9,9 +10,9 @@ alias ducks='du -cks * | sort -rn | head'
 alias v=nvim
 
 export LC_ALL=en_US.UTF-8
-LANG=en_US.UTF-8
-LC_ALL=en_US.UTF-8
-LC_CTYPE=
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=
 
 export COLORTERM=truecolor
 
@@ -25,6 +26,8 @@ if [ -f "`which brew`" ] && [ -f $(brew --prefix)/etc/bash_completion ]; then
 	source $(brew --prefix)/etc/bash_completion
 fi
 
+# set -o vi
+
 #--- ANDROID
 
 if [ -d "$HOME/Library" ]; then
@@ -33,10 +36,14 @@ if [ -d "$HOME/Library" ]; then
 	export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH
 fi
 
+#--- BAT
+
+export BAT_THEME=gruvbox-dark
+
 #--- DOCKER
 
-#export COMPOSE_DOCKER_CLI_BUILD=1
-#export DOCKER_BUILDKIT=1
+# export COMPOSE_DOCKER_CLI_BUILD=1
+# export DOCKER_BUILDKIT=1
 
 #--- FLUTTER
 
@@ -44,17 +51,15 @@ fi
 
 #--- FZF
 
-if [ -d "$HOME/Library" ]; then
-	if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
-		export PATH="${PATH:+${PATH}:}/usr/local/opt/fzf/bin"
-	fi
+# if [ -d "$HOME/Library" ]; then
+# 	if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
+# 		export PATH="${PATH:+${PATH}:}/usr/local/opt/fzf/bin"
+# 	fi
+# 	[[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.bash" 2> /dev/null
+# 	source "/usr/local/opt/fzf/shell/key-bindings.bash"
+# fi
 
-	[[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.bash" 2> /dev/null
-
-	source "/usr/local/opt/fzf/shell/key-bindings.bash"
-fi
-
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+export FZF_DEFAULT_COMMAND='fd --type=f --hidden --exclude=.git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 #--- GIT
@@ -72,7 +77,7 @@ export PATH=$PATH:$GOPATH/bin
 
 if [ -d "$HOME/.jenv" ]; then
 	export PATH="$HOME/.jenv/bin:$PATH"
-	eval "$(jenv init -)"
+	# eval "$(jenv init -)"
 fi
 
 #--- NODE.JS
@@ -94,7 +99,3 @@ eval "$(starship init bash)"
 #---  ZOXIDE
 
 eval "$(zoxide init bash)"
-
-#--- BAT
-
-export BAT_THEME=gruvbox-dark
