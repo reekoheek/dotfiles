@@ -62,7 +62,7 @@ export BAT_THEME=gruvbox-dark
 export FZF_DEFAULT_COMMAND='fd --type=f --hidden --exclude=.git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-#--- GIT
+#---GIT
 
 alias g=git
 
@@ -75,10 +75,10 @@ export PATH=$PATH:$GOPATH/bin
 
 #--- JAVA
 
-if [ -d "$HOME/.jenv" ]; then
-	export PATH="$HOME/.jenv/bin:$PATH"
-	# eval "$(jenv init -)"
-fi
+# if [ -d "$HOME/.jenv" ]; then
+# 	export PATH="$HOME/.jenv/bin:$PATH"
+# 	# eval "$(jenv init -)"
+# fi
 
 #--- NODE.JS
 
