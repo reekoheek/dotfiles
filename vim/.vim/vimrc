@@ -61,6 +61,9 @@ set laststatus=2
 " set cmdheight=2
 " set shortmess+=c
 
+set foldmethod=syntax
+set foldlevelstart=99
+
 " Use system clipboard -  http://vim.wikia.com/wiki/Accessing_the_system_clipboard
 let uname = substitute(system('uname'), '\n', '', '')
 if uname == 'Darwin'
