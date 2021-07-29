@@ -1,10 +1,10 @@
 #--- SYSTEM
 
-set LC_ALL en_US.UTF-8
-set LANG en_US.UTF-8
-set LC_ALL en_US.UTF-8
-set LC_CTYPE ""
-set COLORTERM truecolor
+set -x LC_ALL en_US.UTF-8
+set -x LANG en_US.UTF-8
+set -x LC_ALL en_US.UTF-8
+set -x LC_CTYPE ""
+set -x COLORTERM truecolor
 
 set PATH /usr/local/bin /usr/bin /bin /usr/sbin /sbin
 
@@ -23,19 +23,19 @@ end
 #--- ANDROID
 
 if test -d "$HOME/Library/Android/sdk"
-    set ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
-    set ANDROID_HOME "$HOME/Library/Android/sdk"
+    set -x ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
+    set -x ANDROID_HOME "$HOME/Library/Android/sdk"
     set -p PATH "$ANDROID_HOME/platform-tools" "$ANDROID_HOME/tools/bin"
 end
 
 #--- BAT
 
-set BAT_THEME "gruvbox-dark"
+set -x BAT_THEME "gruvbox-dark"
 
 #--- DOCKER
 
-# set COMPOSE_DOCKER_CLI_BUILD 1
-# set DOCKER_BUILDKIT 1
+# set -x COMPOSE_DOCKER_CLI_BUILD 1
+# set -x DOCKER_BUILDKIT 1
 
 #--- FLUTTER
 
@@ -47,7 +47,7 @@ end
 
 set fzf_fd_opts --hidden --exclude=.git
 set -x FZF_DEFAULT_COMMAND "fd --type=f --hidden --exclude=.git"
-# set FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+# set -x FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
 
 #--- GO
 
@@ -57,7 +57,7 @@ set -x FZF_DEFAULT_COMMAND "fd --type=f --hidden --exclude=.git"
 #     end
 # end
 
-set GOPATH "$HOME/var/go"
+set -x GOPATH "$HOME/var/go"
 set -a PATH "$GOPATH/bin"
 
 #-- JAVA

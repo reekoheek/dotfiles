@@ -118,6 +118,9 @@ Plug 'kevinoid/vim-jsonc'
 " Plug 'pangloss/vim-javascript'
 Plug 'honza/vim-snippets'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 call plug#end()
 
@@ -138,15 +141,14 @@ augroup Comment
 	autocmd FileType typescript setlocal commentstring=//\ %s
 augroup end
 
-function! ChangeBuffer(count) abort
-	if a:count ==# 0
-		silent! execute 'bnext'
-	else
-		silent! execute 'buffer ' . a:count
-	endif
-endfunction
-
-command! -nargs=1 ChangeBufferCmd call ChangeBuffer(<args>)
+" function! ChangeBuffer(count) abort
+" 	if a:count ==# 0
+" 		silent! execute 'bnext'
+" 	else
+" 		silent! execute 'buffer ' . a:count
+" 	endif
+" endfunction
+" command! -nargs=1 ChangeBufferCmd call ChangeBuffer(<args>)
 
 " function! StripTrailingWhitespace ()
 " 	let l = line('.')
@@ -185,7 +187,7 @@ let g:lightline = {
 let g:lightline.component_raw = {'buffers': 1}
 " let g:lightline.separator = {'left': '', 'right': ''}
 " let g:lightline.subseparator = {'left': '', 'right': ''}
-let g:lightline#bufferline#show_number = 1
+let g:lightline#bufferline#show_number = 0
 let g:lightline#bufferline#unnamed = '[noname]'
 let g:lightline#bufferline#clickable = 1
 
@@ -220,18 +222,22 @@ endif
 " Coc
 let g:coc_config_home = resolve($HOME.'/.vim')
 let g:coc_global_extensions = [
+	\ 'coc-css',
 	\ 'coc-eslint',
 	\ 'coc-json',
 	\ 'coc-snippets',
 	\ 'coc-tsserver',
+	\ 'coc-prettier',
 	\ 'coc-vimlsp',
 	\ 'coc-explorer',
+	\ 'coc-java',
+	\ 'coc-kotlin',
 	\ ]
 
 "" Bind keys
 ""----------------------------------------------------------------------------
 
-let mapleader=','
+let mapleader=' '
 
 nnoremap Y y$
 noremap <Up> <Nop>
@@ -244,38 +250,24 @@ inoremap <Left> <Nop>
 inoremap <Right> <Nop>
 
 " imap <C-C> <ESC>
-" nnoremap <silent> <C-J> :<C-U>m .+1<CR>==
-" nnoremap <silent> <C-K> :<C-U>m .-2<CR>==
-" inoremap <silent> <C-J> <Esc>:m .+1<CR>==gi
-" inoremap <silent> <C-K> <Esc>:m .-2<CR>==gi
-" vnoremap <silent> <C-J> :m '>+1<CR>gv=gv
-" vnoremap <silent> <C-K> :m '<-2<CR>gv=gv
-" inoremap jk <Esc>
-" inoremap kj <Esc>
 
-nnoremap <silent> <Leader>p :<C-U>execute printf(":Files %s", g:cwd)<CR>
-nnoremap <silent> <Leader>b :<C-U>Buffers<CR>
-nnoremap <silent> <Leader>e :<C-U>CocCommand explorer --sources=buffer+,file+ --position floating<CR>
-" nnoremap <silent> <Leader>e :<C-U>execute printf("Lex! %s", g:cwd)<CR>
-inoremap <silent> <Leader>w <ESC>:update<CR>
-nnoremap <silent> <Leader>w :<C-U>update<CR>
-inoremap <silent> <Leader>q <ESC>:q!<CR>
-nnoremap <silent> <Leader>q :<C-U>q!<CR>
+nnoremap <silent> <leader>p :<C-u>execute printf(":Files %s", g:cwd)<CR>
+nnoremap <silent> <leader>e :<C-u>CocCommand explorer --sources=buffer+,file+ --position floating<CR>
 
-nnoremap <silent> <C-L> :<C-U>let @/ = "" <Bar> nohl<CR><C-L>
+nnoremap <silent> <C-L> :<C-u>let @/ = "" <Bar> nohl<CR><C-L>
 
-nnoremap g/ :<C-U>%s//g<Left><Left>
+nnoremap g/ :<C-u>%s//g<Left><Left>
 
-nnoremap <silent> gb :<C-U>ChangeBufferCmd(v:count)<CR>
-nnoremap <silent> gB :<C-U>bprev<CR>
+" nnoremap <silent> [a :<C-u>ALEPreviousWrap<CR>
+" nnoremap <silent> ]a :<C-u>ALENextWrap<CR>
+" nnoremap <silent> gd :<C-u>ALEGoToDefinition<CR>
+" nnoremap <silent> <leader>a :<C-u>ALEDetail<CR>
+" nnoremap <silent> <C-]> :<C-u>ALEGoToTypeDefinition<CR>
 
-" nnoremap <silent> [a :<C-U>ALEPreviousWrap<CR>
-" nnoremap <silent> ]a :<C-U>ALENextWrap<CR>
-" nnoremap <silent> gd :<C-U>ALEGoToDefinition<CR>
-" nnoremap <silent> <leader>a :<C-U>ALEDetail<CR>
-" nnoremap <silent> <C-]> :<C-U>ALEGoToTypeDefinition<CR>
-
-nnoremap <silent> <Leader><Leader> <C-^>
+nnoremap <silent> <leader><leader> <C-^>
+nnoremap <silent> <leader>j :<C-u>bprev<CR>
+nnoremap <silent> <leader>k :<C-u>bnext<CR>
+nnoremap <silent> <leader>d :<C-u>bd<cr>
 
 " Coc
 " Use tab for trigger completion with characters ahead and navigate.
@@ -396,20 +388,20 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " provide custom statusline: lightline.vim, vim-airline.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" " Mappings for CoCList
+" " Show all diagnostics.
+" nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" " Manage extensions.
+" nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" " Show commands.
+" nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" " Find symbol of current document.
+" nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" " Search workspace symbols.
+" nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" " Do default action for next item.
+" nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" " Do default action for previous item.
+" nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" " Resume latest coc list.
+" nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>

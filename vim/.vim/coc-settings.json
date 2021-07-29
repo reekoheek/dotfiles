@@ -8,5 +8,7 @@
 	"explorer.previewAction.onHover": "content",
 	"diagnostic.errorSign": "●",
 	"diagnostic.warningSign": "●",
-	"diagnostic.infoSign": "●"
+	"diagnostic.infoSign": "●",
+	"javascript.suggestionActions.enabled": false,
+	"java.import.gradle.enabled": true
 }
