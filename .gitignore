@@ -1,0 +1,4 @@
+Session.vim
+tmux/.tmux/resurrect
+tmux/.tmux/plugins/*
+!tmux/.tmux/plugins/tpm
