@@ -122,7 +122,9 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'ryanoasis/vim-devicons'
-Plug 'tpope/vim-obsession'
+Plug 'kana/vim-textobj-user'
+Plug 'PeterRincker/vim-argumentative'
+Plug 'tpope/vim-obsession' " must be last
 
 call plug#end()
 
@@ -148,6 +150,51 @@ augroup FixAutochdir
 	autocmd InsertEnter * let g:cwd = getcwd() | set autochdir
 	autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(g:cwd)
 augroup end
+
+augroup highlight_yank
+    autocmd!
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank({timeout = 40})
+augroup END
+
+call textobj#user#plugin('backticks', {
+\   'backticks-a': {
+\     'pattern': '`\_.\{-}`',
+\     'select': 'a`',
+\   },
+\   'backticks-i': {
+\     'pattern': '`\zs\_.\{-}\ze`',
+\     'select': 'i`',
+\   },
+\ })
+
+call textobj#user#plugin('line', {
+\   '-': {
+\     'select-a-function': 'CurrentLineA',
+\     'select-a': 'al',
+\     'select-i-function': 'CurrentLineI',
+\     'select-i': 'il',
+\   },
+\ })
+
+function! CurrentLineA()
+  normal! 0
+  let head_pos = getpos('.')
+  normal! $
+  let tail_pos = getpos('.')
+  return ['v', head_pos, tail_pos]
+endfunction
+
+function! CurrentLineI()
+  normal! ^
+  let head_pos = getpos('.')
+  normal! g_
+  let tail_pos = getpos('.')
+  let non_blank_char_exists_p = getline('.')[head_pos[2] - 1] !~# '\s'
+  return
+  \ non_blank_char_exists_p
+  \ ? ['v', head_pos, tail_pos]
+  \ : 0
+endfunction
 
 " function! ChangeBuffer(count) abort
 " 	if a:count ==# 0
@@ -248,31 +295,47 @@ let g:coc_global_extensions = [
 
 let mapleader=' '
 
+nnoremap <silent> Q <nop>
 nnoremap Y y$
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-inoremap <Up> <Nop>
-inoremap <Down> <Nop>
-inoremap <Left> <Nop>
-inoremap <Right> <Nop>
+noremap <Up> <nop>
+noremap <Down> <nop>
+noremap <Left> <nop>
+noremap <Right> <nop>
+inoremap <Up> <nop>
+inoremap <Down> <nop>
+inoremap <Left> <nop>
+inoremap <Right> <nop>
+inoremap <C-C> <esc>
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
+nnoremap <C-j> :m +1<CR>==
+nnoremap <C-k> :m -2<CR>==
+inoremap <C-j> <esc>:m +1<CR>==a
+inoremap <C-k> <esc>:m -2<CR>==a
+vnoremap <C-j> :m '>+1<CR>gv=gv
+vnoremap <C-k> :m '<-2<CR>gv=gv
+inoremap , ,<C-g>u
+inoremap . .<C-g>u
+inoremap ? ?<C-g>u
+inoremap ! !<C-g>u
 
-" imap <C-C> <ESC>
+nmap [a <Plug>Argumentative_Prev
+nmap ]a <Plug>Argumentative_Next
+xmap [a <Plug>Argumentative_XPrev
+xmap ]a <Plug>Argumentative_XNext
+nmap <a <Plug>Argumentative_MoveLeft
+nmap >a <Plug>Argumentative_MoveRight
+xmap ia <Plug>Argumentative_InnerTextObject
+xmap aa <Plug>Argumentative_OuterTextObject
+omap ia <Plug>Argumentative_OpPendingInnerTextObject
+omap aa <Plug>Argumentative_OpPendingOuterTextObject
 
 nnoremap <silent> <leader>p :<C-u>Files<CR>
 " nnoremap <silent> <leader>p :<C-u>execute printf(":Files %s", g:cwd)<CR>
 nnoremap <silent> <leader>e :<C-u>CocCommand explorer --sources=buffer+,file+ --position floating<CR>
-
 nnoremap <silent> <C-L> :<C-u>let @/ = "" <Bar> nohl<CR><C-L>
-
 nnoremap g/ :<C-u>%s//g<Left><Left>
-
-" nnoremap <silent> [a :<C-u>ALEPreviousWrap<CR>
-" nnoremap <silent> ]a :<C-u>ALENextWrap<CR>
-" nnoremap <silent> gd :<C-u>ALEGoToDefinition<CR>
-" nnoremap <silent> <leader>a :<C-u>ALEDetail<CR>
-" nnoremap <silent> <C-]> :<C-u>ALEGoToTypeDefinition<CR>
 
 nnoremap <silent> <leader><leader> <C-^>
 nnoremap <silent> <leader>j :<C-u>bprev<CR>
@@ -294,17 +357,17 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use <c-space> to trigger completion.
+" Use <C-space> to trigger completion.
 if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
+  inoremap <silent><expr> <C-space> coc#refresh()
 else
-  inoremap <silent><expr> <c-@> coc#refresh()
+  inoremap <silent><expr> <C-@> coc#refresh()
 endif
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+                              \: "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -373,8 +436,8 @@ omap ac <Plug>(coc-classobj-a)
 if has('nvim-0.4.0') || has('patch-8.2.0750')
   nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
   vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
