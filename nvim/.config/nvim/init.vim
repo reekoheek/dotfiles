@@ -1,4 +1,4 @@
-"" General
+"" GENNERAL
 ""----------------------------------------------------------------------------
 
 set nocompatible
@@ -17,7 +17,6 @@ set relativenumber
 set number
 set cursorline
 set scrolloff=8
-" set scrolloff=999
 set colorcolumn=80,120
 set signcolumn=yes
 
@@ -40,7 +39,6 @@ set list
 
 set hlsearch
 set incsearch
-" set autochdir
 set wildmenu
 set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.psd
 set wildignore+=*.pdf
@@ -58,8 +56,6 @@ set noshowmode
 set showtabline=2
 set guioptions-=e
 set laststatus=2
-" set cmdheight=2
-" set shortmess+=c
 
 set foldmethod=syntax
 set foldlevelstart=99
@@ -75,77 +71,16 @@ endif
 filetype plugin indent on
 syntax on
 
-"" Pre Plugins
+"" PRECONFIGS
 ""----------------------------------------------------------------------------
 
-"" Plugins
-""----------------------------------------------------------------------------
-
-if !has('nvim')
-	packadd! matchit
-endif
-
-call plug#begin('~/.vim/plugged')
-
-" Theme
-Plug 'morhetz/gruvbox'
-Plug 'itchyny/lightline.vim'
-Plug 'shinchu/lightline-gruvbox.vim'
-Plug 'mengelbrecht/lightline-bufferline'
-
-Plug 'tpope/vim-surround'
-Plug 'airblade/vim-gitgutter'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'junegunn/vim-easy-align', {'on': '<plug>(LiveEasyAlign)'}
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-Plug 'kshenoy/vim-signature'
-Plug 'jiangmiao/auto-pairs'
-
-" File navigation
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
-" File editing
-Plug 'editorconfig/editorconfig-vim'
-Plug 'mattn/emmet-vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Plug 'dense-analysis/ale'
-Plug 'jonsmithers/vim-html-template-literals'
-Plug 'sheerun/vim-polyglot'
-Plug 'kevinoid/vim-jsonc'
-" Plug 'leafgarland/typescript-vim'
-" Plug 'pangloss/vim-javascript'
-Plug 'honza/vim-snippets'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-Plug 'ryanoasis/vim-devicons'
-Plug 'kana/vim-textobj-user'
-Plug 'PeterRincker/vim-argumentative'
-Plug 'tpope/vim-obsession' " must be last
-
-call plug#end()
-
-"" Custom configuration
-""----------------------------------------------------------------------------
-
-colorscheme gruvbox
-highlight Normal guibg=NONE ctermbg=NONE
-
-augroup VimrcUpdated
-	autocmd!
-	autocmd BufWritePre *vimrc,coc-settings.json source ~/.vim/vimrc
-augroup end
-
-augroup Comment
+augroup fix_comments
 	autocmd!
 	autocmd FileType javascript setlocal commentstring=//\ %s
 	autocmd FileType typescript setlocal commentstring=//\ %s
 augroup end
 
-augroup FixAutochdir
+augroup fix_autochdir
 	autocmd!
 	autocmd InsertEnter * let g:cwd = getcwd() | set autochdir
 	autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(g:cwd)
@@ -156,6 +91,63 @@ augroup highlight_yank
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank({timeout = 40})
 augroup END
 
+"" PLUGINS
+""----------------------------------------------------------------------------
+
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+	silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+augroup plug
+	autocmd!
+	autocmd BufWritePost init.vim source %
+augroup end
+
+call plug#begin()
+
+" Theme
+Plug 'morhetz/gruvbox'
+Plug 'itchyny/lightline.vim'
+Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'lewis6991/gitsigns.nvim'
+
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'jiangmiao/auto-pairs'
+
+" File editing
+Plug 'editorconfig/editorconfig-vim'
+Plug 'mattn/emmet-vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'jonsmithers/vim-html-template-literals'
+Plug 'sheerun/vim-polyglot'
+Plug 'kevinoid/vim-jsonc'
+Plug 'honza/vim-snippets'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'ryanoasis/vim-devicons'
+Plug 'kana/vim-textobj-user'
+Plug 'PeterRincker/vim-argumentative'
+Plug 'farmergreg/vim-lastplace'
+Plug 'tpope/vim-obsession' " must be last
+
+call plug#end()
+
+"" CONFIGS
+""----------------------------------------------------------------------------
+
+" Gruvbox
+let g:gruvbox_transparent_bg = 1
+let g:gruvbox_contrast_dark = 'hard'
+colorscheme gruvbox
+highlight Normal guibg=NONE ctermbg=NONE
+
+" textobj
 call textobj#user#plugin('backticks', {
 \   'backticks-a': {
 \     'pattern': '`\_.\{-}`',
@@ -196,52 +188,16 @@ function! CurrentLineI()
   \ : 0
 endfunction
 
-" function! ChangeBuffer(count) abort
-" 	if a:count ==# 0
-" 		silent! execute 'bnext'
-" 	else
-" 		silent! execute 'buffer ' . a:count
-" 	endif
-" endfunction
-" command! -nargs=1 ChangeBufferCmd call ChangeBuffer(<args>)
-
-" function! StripTrailingWhitespace ()
-" 	let l = line('.')
-" 	let c = col('.')
-" 	%s/\s\+$//e
-" 	call cursor(l, c)
-" endfunction
-
-" augroup AutoStripTrailingWhitespace
-" 	autocmd!
-" 	autocmd BufWritePre * call StripTrailingWhitespace()
-" augroup end
-
-
-"" Plugins configuration
-""----------------------------------------------------------------------------
-
-" Gruvbox
-let g:gruvbox_transparent_bg = 1
-let g:gruvbox_contrast_dark = 'hard'
-
-" let g:netrw_banner = 0
-" let g:netrw_winsize = 30
-" let g:netrw_liststyle = 3
-" let g:netrw_dirhistmax = 0
-" let g:netrw_browse_split = 4
-" let g:netrw_altv = 1
-
 " Lightline
 let g:lightline = {
 	\ 'colorscheme': 'gruvbox',
 	\ 'tabline': {'left': [['buffers']], 'right': [['']]},
 	\ 'component_expand': {'buffers': 'lightline#bufferline#buffers'},
-	\ 'component_type': {'buffers': 'tabsel'}
+	\ 'component_type': {'buffers': 'tabsel'},
+	\ 'component_raw': {'buffers': 1},
+	\ 'separator': {'left': '', 'right': ''},
+	\ 'subseparator': {'left': '', 'right': ''},
 	\ }
-let g:lightline.component_raw = {'buffers': 1}
-" let g:lightline.separator = {'left': '', 'right': ''}
-" let g:lightline.subseparator = {'left': '', 'right': ''}
 let g:lightline#bufferline#show_number = 0
 let g:lightline#bufferline#unnamed = '[noname]'
 let g:lightline#bufferline#clickable = 1
@@ -251,32 +207,10 @@ let g:lightline#bufferline#enable_devicons = 1
 let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1 " Status line types/signatures.
 
-" ALE
-" let g:ale_sign_error = '●'
-" let g:ale_sign_warning = '●'
-" let g:ale_linters = {
-" 	\ 'typescript': ['eslint', 'tsserver'],
-" 	\ }
-" " let g:ale_lint_on_text_changed = 'never'
-" " let g:ale_lint_on_insert_leave = 1
-" " let g:ale_lint_on_enter = 1
-" let g:ale_fixers = {
-" 	\ '*': ['remove_trailing_lines', 'trim_whitespace'],
-" 	\ }
-" let g:ale_fix_on_save = 1
-" let g:ale_completion_enabled = 1
-" let g:ale_completion_autoimport = 1
-" set omnifunc=ale#completion#OmniFunc
-
 " Autopairs
 let g:AutoPairsFlyMode = 1
 
-" if !exists("g:cwd")
-" 	let g:cwd = getcwd()
-" endif
-
 " Coc
-let g:coc_config_home = resolve($HOME.'/.vim')
 let g:coc_global_extensions = [
 	\ 'coc-css',
 	\ 'coc-eslint',
@@ -290,9 +224,10 @@ let g:coc_global_extensions = [
 	\ 'coc-kotlin',
 	\ ]
 
-"" Bind keys
+"" MAPS
 ""----------------------------------------------------------------------------
 
+noremap <space> <nop>
 let mapleader=' '
 
 nnoremap <silent> Q <nop>
@@ -331,18 +266,42 @@ xmap aa <Plug>Argumentative_OuterTextObject
 omap ia <Plug>Argumentative_OpPendingInnerTextObject
 omap aa <Plug>Argumentative_OpPendingOuterTextObject
 
-nnoremap <silent> <leader>p :<C-u>Files<CR>
-" nnoremap <silent> <leader>p :<C-u>execute printf(":Files %s", g:cwd)<CR>
-nnoremap <silent> <leader>e :<C-u>CocCommand explorer --sources=buffer+,file+ --position floating<CR>
+nnoremap <silent> <leader>p :<C-u>Telescope find_files find_command=rg,-g,!.git/,--ignore,--hidden,--files<CR>
+nnoremap <silent> <leader>f :<C-u>Telescope live_grep<CR>
+nnoremap <silent> <leader>e :<C-u>Telescope file_browser hidden=1<CR>
 nnoremap <silent> <C-L> :<C-u>let @/ = "" <Bar> nohl<CR><C-L>
 nnoremap g/ :<C-u>%s//g<Left><Left>
 
 nnoremap <silent> <leader><leader> <C-^>
 nnoremap <silent> <leader>j :<C-u>bprev<CR>
 nnoremap <silent> <leader>k :<C-u>bnext<CR>
+nnoremap <silent> <leader>h :<C-u>bfirst<CR>
+nnoremap <silent> <leader>l :<C-u>blast<CR>
 nnoremap <silent> <leader>d :<C-u>bd<cr>
 
+
+lua <<EOF
+require('gitsigns').setup()
+require('telescope').setup({
+defaults = {
+	vimgrep_arguments = {
+		'rg',
+		'--ignore',
+		'--hidden',
+		'--color=never',
+		'--no-heading',
+		'--with-filename',
+		'--line-number',
+		'--column',
+		'--smart-case'
+		},
+	prompt_prefix = '🔍',
+	},
+})
+EOF
+
 " Coc
+" ---------------------------------------------------------------------------
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -376,7 +335,7 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gD <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
