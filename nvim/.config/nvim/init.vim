@@ -115,11 +115,13 @@ call plug#begin()
 
 " Theme
 Plug 'morhetz/gruvbox'
+" Plug 'sainnhe/gruvbox-material'
 " Plug 'itchyny/lightline.vim'
 " Plug 'shinchu/lightline-gruvbox.vim'
 " Plug 'mengelbrecht/lightline-bufferline'
 Plug 'hoob3rt/lualine.nvim'
-Plug 'romgrk/barbar.nvim'
+Plug 'akinsho/nvim-bufferline.lua'
+" Plug 'romgrk/barbar.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 " Plug 'ryanoasis/vim-devicons'
 
@@ -137,6 +139,7 @@ Plug 'cohama/lexima.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'mattn/emmet-vim'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'ray-x/lsp_signature.nvim'
@@ -146,7 +149,7 @@ Plug 'jonsmithers/vim-html-template-literals'
 Plug 'sheerun/vim-polyglot'
 Plug 'kevinoid/vim-jsonc'
 Plug 'honza/vim-snippets'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'kana/vim-textobj-user'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'dstein64/vim-startuptime'
@@ -162,6 +165,9 @@ call plug#end()
 let g:gruvbox_transparent_bg = 1
 let g:gruvbox_contrast_dark = 'hard'
 colorscheme gruvbox
+" let g:gruvbox_material_transparent_background = 1
+" let g:gruvbox_material_background = 'hard'
+" colorscheme gruvbox-material
 highlight Normal guibg=NONE ctermbg=NONE
 
 " textobj
@@ -282,8 +288,10 @@ nnoremap <silent> <leader>d :<C-u>bd<cr>
 lua <<EOF
 require('gitsigns').setup()
 require('lualine').setup()
+require("bufferline").setup{}
+require'nvim-treesitter.configs'.setup { highlight = { enable = true } }
 EOF
 
 " source ~/.config/nvim/config/coc.vim
 source ~/.config/nvim/config/telescope.vim
-source ~/.config/nvim/config/lsp.vim
+luafile ~/.config/nvim/lua/config/lsp.lua
