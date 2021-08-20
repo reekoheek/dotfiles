@@ -133,7 +133,8 @@ end
 local options = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '<leader>p', ':<C-u>lua p_find_files()<CR>', options)
 vim.api.nvim_set_keymap('n', '<leader>f', ':<C-u>lua require("telescope.builtin").live_grep()<CR>', options)
-vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>lua require("telescope.builtin").file_browser({ hidden = true })<CR>', options)
+-- vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>lua require("telescope.builtin").file_browser({ hidden = true })<CR>', options)
+vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>Explore<CR>', options)
 vim.api.nvim_set_keymap('n', 'gr', ':<C-u>lua require[[telescope.builtin]].lsp_references()<CR>', options)
 
 -- PLUGINS
