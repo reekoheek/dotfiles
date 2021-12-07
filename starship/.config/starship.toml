@@ -1,4 +1,4 @@
 format = "$all"
 
-[character]
-vicmd_symbol = "[❮](bold yellow)"
+# [character]
+# vicmd_symbol = "[❮](bold yellow)"

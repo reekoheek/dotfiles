@@ -19,9 +19,11 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 
 local servers = {
 	tsserver = {
-		init_options = { documentFormatting = false },
-		root_dir = vim.loop.cwd,
+		filetypes = { 'typescript', 'typescriptreact' },
+		-- init_options = { documentFormatting = false },
+		-- root_dir = vim.loop.cwd,
 	},
+	eslint = {},
 	jsonls = {
 		filetypes = { 'json', 'jsonc' },
 		settings = {
@@ -79,23 +81,54 @@ local servers = {
 		},
 	},
 	vimls = {},
-	-- jdtls = { cmd = { 'jdtls' } },
-	jdtls = {},
-	-- pyright = {},
+	-- jdtls = {},
+	pyright = {},
 	['null-ls'] = {},
 }
+
+-- gopls
+
+function goimports(timeoutms)
+	local context = { source = { organizeImports = true } }
+	vim.validate { context = { context, "t", true } }
+
+	local params = vim.lsp.util.make_range_params()
+	params.context = context
+
+	local method = "textDocument/codeAction"
+	local resp = vim.lsp.buf_request_sync(0, method, params, timeoutms)
+	if resp and resp[1] then
+		local result = resp[1].result
+		if result and result[1] then
+			local edit = result[1].edit
+			vim.lsp.util.apply_workspace_edit(edit)
+		end
+	end
+
+	vim.lsp.buf.formatting()
+end
+
+vim.cmd[[
+augroup roh_goimports
+	au!
+	autocmd BufWritePre *.go lua goimports(1000)
+augroup END
+]]
+
+-- null-ls
 
 local null_ls = require 'null-ls'
 local b = null_ls.builtins
 
-vim.env.PRETTIERD_DEFAULT_CONFIG = vim.fn.stdpath 'config' .. '/.prettierrc'
+-- vim.env.PRETTIERD_DEFAULT_CONFIG = vim.fn.stdpath 'config' .. '/.prettierrc'
 
 null_ls.config {
 	debounce = 150,
 	sources = {
-		b.diagnostics.eslint.with {
-			command = 'eslint_d',
-		},
+		-- b.diagnostics.eslint_d,
+		-- b.diagnostics.eslint.with {
+		-- 	command = 'eslint_d',
+		-- },
 		b.formatting.stylua.with {
 			args = {
 				'--config-path',
@@ -103,19 +136,19 @@ null_ls.config {
 				'-',
 			},
 		},
-		b.formatting.prettierd.with {
-			filetypes = {
-				'typescriptreact',
-				'typescript',
-				'javascriptreact',
-				'javascript',
-				'svelte',
-				'json',
-				'jsonc',
-				'css',
-				'html',
-			},
-		},
+		-- b.formatting.prettierd.with {
+		-- 	filetypes = {
+		-- 		'typescriptreact',
+		-- 		'typescript',
+		-- 		'javascriptreact',
+		-- 		'javascript',
+		-- 		'svelte',
+		-- 		'json',
+		-- 		'jsonc',
+		-- 		'css',
+		-- 		'html',
+		-- 	},
+		-- },
 	},
 }
 
@@ -130,11 +163,11 @@ for name, opts in pairs(servers) do
 
 			if client.resolved_capabilities.code_lens then
 				vim.cmd [[
-			augroup roh_codelens
+				augroup roh_codelens
 				au!
 				au InsertEnter,InsertLeave * lua vim.lsp.codelens.refresh()
-	 		augroup END
-			]]
+				augroup END
+				]]
 			end
 
 			require 'lsp_signature'.on_attach()
@@ -142,25 +175,27 @@ for name, opts in pairs(servers) do
 
 		local on_init = function(client)
 			vim.notify('Language Server Client successfully started!', 'info', {
-					title = client.name,
-				})
+				title = client.name,
+			})
 		end
 
 		local client = lspconfig[name]
 		client.setup(vim.tbl_extend('force', {
-					flags = { debounce_text_changes = 150 },
-					on_attach = on_attach,
-					on_init = on_init,
-					capabilities = capabilities,
-			}, opts))
+			flags = { debounce_text_changes = 150 },
+			on_attach = on_attach,
+			on_init = on_init,
+			capabilities = capabilities,
+		}, opts))
 	end
 end
 
-vim.cmd([[
-nnoremap <silent> gd :lua vim.lsp.buf.definition()<cr>
-nnoremap <silent> gd :lua vim.lsp.buf.type_definition()<cr>
-nnoremap <silent> ]g :lua vim.lsp.diagnostic.goto_next()<cr>
-nnoremap <silent> [g :lua vim.lsp.diagnostic.goto_prev()<cr>
-nnoremap <silent> K :lua vim.lsp.buf.hover{}<cr>
-nnoremap <silent> <leader><cr> :lua require('telescope.builtin').lsp_code_actions()<cr>
-]])
+local options = {
+	noremap = true,
+	silent = true,
+}
+vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<cr>', options)
+vim.api.nvim_set_keymap('n', 'gD', ':lua vim.lsp.buf.type_definition()<cr>', options)
+vim.api.nvim_set_keymap('n', ']g', ':lua vim.lsp.diagnostic.goto_next()<cr>', options)
+vim.api.nvim_set_keymap('n', '[g', ':lua vim.lsp.diagnostic.goto_prev()<cr>', options)
+vim.api.nvim_set_keymap('n', 'K', ':lua vim.lsp.buf.hover()<cr>', options)
+vim.api.nvim_set_keymap('n', '<leader><cr>', ':lua require("telescope.builtin").lsp_code_actions()<cr>', options)

@@ -8,7 +8,7 @@ vim.opt.ttimeoutlen = 0
 vim.opt.errorbells = false
 vim.opt.updatetime = 300
 vim.opt.title = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.cursorline = true
 vim.opt.scrolloff = 8
@@ -23,6 +23,7 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
 vim.opt.hidden = true
+vim.opt.switchbuf = 'useopen'
 vim.opt.backspace = 'indent,eol,start'
 vim.opt.autoindent = true
 vim.opt.smartindent = true
@@ -48,7 +49,7 @@ vim.opt.wildignore = {
 	'node_modules/*',
 	'bower_components/*',
 }
-vim.opt.synmaxcol = 2500
+vim.opt.synmaxcol = 120
 vim.cmd[[
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -63,6 +64,7 @@ vim.opt.ruler = false
 vim.opt.showtabline = 2
 vim.opt.laststatus = 2
 vim.opt.foldmethod = 'syntax'
+-- vim.opt.foldmethod = 'indent'
 vim.opt.foldlevelstart = 99
 vim.opt.completeopt = 'menuone,noselect'
 vim.opt.clipboard = vim.loop.os_uname().sysname == 'Linux' and 'unnamedplus' or 'unnamed'
@@ -70,12 +72,6 @@ vim.opt.clipboard = vim.loop.os_uname().sysname == 'Linux' and 'unnamedplus' or 
 vim.cmd[[
 filetype plugin indent on
 syntax on
-
-augroup roh_fix_autochdir
-	autocmd!
-	autocmd InsertEnter * let g:cwd = getcwd() | set autochdir
-	autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(g:cwd)
-augroup end
 
 augroup roh_highlight_yank
     autocmd!
@@ -86,43 +82,43 @@ augroup END
 -- MAPS
 ----------------------------------------------------------------------------
 
-local options = { noremap = true, silent = true }
+local map_opts = { noremap = true, silent = true }
 
-vim.api.nvim_set_keymap('', '<space>', '<nop>', options)
+vim.api.nvim_set_keymap('', '<space>', '<nop>', map_opts)
 vim.g.mapleader = ' '
 
-vim.api.nvim_set_keymap('n', 'Q', '<nop>', options)
-vim.api.nvim_set_keymap('n', 'Y', 'y$', options)
-vim.api.nvim_set_keymap('', '<Up>', '<nop>', options)
-vim.api.nvim_set_keymap('', '<Down>', '<nop>', options)
-vim.api.nvim_set_keymap('', '<Left>', '<nop>', options)
-vim.api.nvim_set_keymap('', '<Right>', '<nop>', options)
-vim.api.nvim_set_keymap('i', '<Up>', '<nop>', options)
-vim.api.nvim_set_keymap('i', '<Down>', '<nop>', options)
-vim.api.nvim_set_keymap('i', '<Left>', '<nop>', options)
-vim.api.nvim_set_keymap('i', '<Right>', '<nop>', options)
-vim.api.nvim_set_keymap('i', '<C-C>', '<esc>', options)
-vim.api.nvim_set_keymap('n', 'n', 'nzzzv', options)
-vim.api.nvim_set_keymap('n', 'N', 'Nzzzv', options)
-vim.api.nvim_set_keymap('n', 'J', 'mzJ`z', options)
-vim.api.nvim_set_keymap('n', '<A-j>', 'm +1<CR>==', options)
-vim.api.nvim_set_keymap('n', '<A-k>', 'm -2<CR>==', options)
-vim.api.nvim_set_keymap('i', '<A-j>', '<esc>:m +1<CR>==a', options)
-vim.api.nvim_set_keymap('i', '<A-k>', '<esc>:m -2<CR>==a', options)
-vim.api.nvim_set_keymap('v', '<A-j>', ':m \'>+1<CR>gv=gv', options)
-vim.api.nvim_set_keymap('v', '<A-k>', ':m \'<-2<CR>gv=gv', options)
-vim.api.nvim_set_keymap('i', ',', ',<C-g>u', options)
-vim.api.nvim_set_keymap('i', '.', '.<C-g>u', options)
-vim.api.nvim_set_keymap('i', '?', '?<C-g>u', options)
-vim.api.nvim_set_keymap('i', '!', '!<C-g>u', options)
-vim.api.nvim_set_keymap('n', '<C-L>', ':<C-u>let @/ = "" <Bar> nohl<CR><C-L>', options)
-vim.api.nvim_set_keymap('n', 'g/', '<C-u>%s//g<Left><Left>', options)
-vim.api.nvim_set_keymap('n', '<leader><leader>', '<C-^>', options)
-vim.api.nvim_set_keymap('n', '<leader>j', ':<C-u>bprev<CR>', options)
-vim.api.nvim_set_keymap('n', '<leader>k', ':<C-u>bnext<CR>', options)
-vim.api.nvim_set_keymap('n', '<leader>h', ':<C-u>bfirst<CR>', options)
-vim.api.nvim_set_keymap('n', '<leader>l', ':<C-u>blast<CR>', options)
-vim.api.nvim_set_keymap('n', '<leader>d', ':<C-u>bd<cr>', options)
+vim.api.nvim_set_keymap('n', 'Q', '<nop>', map_opts)
+vim.api.nvim_set_keymap('n', 'Y', 'y$', map_opts)
+vim.api.nvim_set_keymap('', '<Up>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('', '<Down>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('', '<Left>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('', '<Right>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('i', '<Up>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('i', '<Down>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('i', '<Left>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('i', '<Right>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('i', '<C-C>', '<esc>', map_opts)
+vim.api.nvim_set_keymap('n', 'n', 'nzzzv', map_opts)
+vim.api.nvim_set_keymap('n', 'N', 'Nzzzv', map_opts)
+vim.api.nvim_set_keymap('n', 'J', 'mzJ`z', map_opts)
+vim.api.nvim_set_keymap('n', '<A-j>', 'm +1<CR>==', map_opts)
+vim.api.nvim_set_keymap('n', '<A-k>', 'm -2<CR>==', map_opts)
+vim.api.nvim_set_keymap('i', '<A-j>', '<esc>:m +1<CR>==a', map_opts)
+vim.api.nvim_set_keymap('i', '<A-k>', '<esc>:m -2<CR>==a', map_opts)
+vim.api.nvim_set_keymap('v', '<A-j>', ':m \'>+1<CR>gv=gv', map_opts)
+vim.api.nvim_set_keymap('v', '<A-k>', ':m \'<-2<CR>gv=gv', map_opts)
+vim.api.nvim_set_keymap('i', ',', ',<C-g>u', map_opts)
+vim.api.nvim_set_keymap('i', '.', '.<C-g>u', map_opts)
+vim.api.nvim_set_keymap('i', '?', '?<C-g>u', map_opts)
+vim.api.nvim_set_keymap('i', '!', '!<C-g>u', map_opts)
+vim.api.nvim_set_keymap('n', '<C-L>', ':<C-u>let @/ = "" <Bar> nohl<CR><C-L>', map_opts)
+vim.api.nvim_set_keymap('n', 'g/', '<C-u>%s//g<Left><Left>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader><leader>', '<C-^>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>j', ':<C-u>bprev<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>k', ':<C-u>bnext<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>h', ':<C-u>bfirst<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>l', ':<C-u>blast<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>d', ':<C-u>bd<cr>', map_opts)
 
 function p_find_files()
 	require('telescope.builtin').find_files({
@@ -130,12 +126,18 @@ function p_find_files()
 	})
 end
 
-local options = { noremap = true, silent = true }
-vim.api.nvim_set_keymap('n', '<leader>p', ':<C-u>lua p_find_files()<CR>', options)
-vim.api.nvim_set_keymap('n', '<leader>f', ':<C-u>lua require("telescope.builtin").live_grep()<CR>', options)
--- vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>lua require("telescope.builtin").file_browser({ hidden = true })<CR>', options)
-vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>Explore<CR>', options)
-vim.api.nvim_set_keymap('n', 'gr', ':<C-u>lua require[[telescope.builtin]].lsp_references()<CR>', options)
+function p_find_notes()
+	require'telescope.builtin'.find_files({
+		cwd = '/Users/reekoheek/Workspaces/notes',
+	})
+end
+
+vim.api.nvim_set_keymap('n', '<leader>n', ':<C-u>lua p_find_notes()<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>p', ':<C-u>lua p_find_files()<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>f', ':<C-u>lua require("telescope.builtin").live_grep()<CR>', map_opts)
+-- vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>lua require("telescope.builtin").file_browser({ hidden = true })<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>Explore<CR>', map_opts)
+vim.api.nvim_set_keymap('n', 'gr', ':<C-u>lua require[[telescope.builtin]].lsp_references()<CR>', map_opts)
 
 -- PLUGINS
 ----------------------------------------------------------------------------
@@ -158,10 +160,22 @@ return require('packer').startup(function()
 	-- Packer can manage itself
 	use { 'wbthomason/packer.nvim' }
 	use {
+		'airblade/vim-rooter',
+		config = function()
+
+			vim.cmd[[
+			augroup roh_fix_autochdir
+				autocmd!
+				autocmd InsertEnter * set autochdir
+				autocmd InsertLeave * set noautochdir | Rooter
+			augroup END
+			]]
+		end,
+	}
+	use {
 		'hoob3rt/lualine.nvim',
 		requires = { 'kyazdani42/nvim-web-devicons' },
 		after = 'gruvbox',
-		-- event = 'VimEnter',
 		config = function()
 			require('lualine').setup({ theme = 'gruvbox' })
 		end,
@@ -170,14 +184,12 @@ return require('packer').startup(function()
 		'akinsho/nvim-bufferline.lua',
 		requires = { 'kyazdani42/nvim-web-devicons' },
 		after = 'gruvbox',
-		-- event = 'VimEnter',
 		config = function()
 			require("bufferline").setup{}
 		end,
 	}
 	use {
 		'morhetz/gruvbox',
-		-- event = 'VimEnter',
 		config = function()
 			vim.g.gruvbox_transparent_bg = 1
 			vim.g.gruvbox_contrast_dark = 'hard'
@@ -243,15 +255,6 @@ return require('packer').startup(function()
 			'typescript',
 		},
 	}
-	-- use {
-	-- 	'neoclide/coc.nvim',
-	-- 	branch = 'release',
-	-- 	config = function()
-	-- 		vim.cmd[[
-	-- 		source ~/.config/nvim/config/coc.vim
-	-- 		]]
-	-- 	end,
-	-- }
 	use {
 		'neovim/nvim-lspconfig',
 		requires = {
@@ -260,6 +263,59 @@ return require('packer').startup(function()
 		config = function()
 			require'config.lsp'
 		end,
+	}
+	-- use {
+	-- 	'fatih/vim-go',
+	-- }
+	use {
+		'mfussenegger/nvim-jdtls',
+		config = function()
+			vim.cmd[[
+			augroup roh_jdtlsp
+				autocmd!
+				autocmd FileType java lua require('jdtls').start_or_attach({ cmd = {'jdt-lsp'} })
+			augroup end
+			]]
+
+			local finders = require'telescope.finders'
+			local sorters = require'telescope.sorters'
+			local actions = require'telescope.actions'
+			local pickers = require'telescope.pickers'
+			require('jdtls.ui').pick_one_async = function(items, prompt, label_fn, cb)
+				local opts = {}
+				pickers.new(opts, {
+					prompt_title = prompt,
+					finder    = finders.new_table {
+						results = items,
+						entry_maker = function(entry)
+							return {
+								value = entry,
+								display = label_fn(entry),
+								ordinal = label_fn(entry),
+							}
+						end,
+					},
+					sorter = sorters.get_generic_fuzzy_sorter(),
+					attach_mappings = function(prompt_bufnr)
+						actions.select_default:replace(function()
+							local selection = actions.get_selected_entry(prompt_bufnr)
+							actions.close(prompt_bufnr)
+
+							cb(selection.value)
+						end)
+
+						return true
+					end,
+				}):find()
+			end
+		end,
+	}
+	use { 'tpope/vim-dadbod' }
+	use {
+		'kristijanhusak/vim-dadbod-ui',
+		-- config = function()
+		-- 	vim.api.nvim_set_keymap('n', '<leader>x', ":DB<cr>", { noremap = true, silent = true })
+		-- end
 	}
 	use {
 		'hrsh7th/nvim-compe',
@@ -276,13 +332,32 @@ return require('packer').startup(function()
 			require'config.compe'
 		end,
 	}
-	use {
-		'jonsmithers/vim-html-template-literals',
-		ft = {
-			'javascript',
-			'typescript',
-		},
-	}
+	-- use {
+	-- 	'cdata/vim-tagged-template',
+	-- 	-- ft = {
+	-- 	-- 	'javascript',
+	-- 	-- 	'typescript',
+	-- 	-- },
+	-- 	config = function()
+	-- 		vim.cmd[[
+	-- 		let g:taggedtemplate#tagSyntaxMap = {
+	-- 			  \ "html": "html",
+	-- 			  \ "md":   "markdown",
+	-- 			  \ "css":  "css" }
+	-- 		autocmd FileType javascript,typescript : call taggedtemplate#applySyntaxMap()
+	-- 		]]
+	-- 	end,
+	-- }
+	-- use {
+	-- 	'jonsmithers/vim-html-template-literals',
+	-- 	ft = {
+	-- 		'javascript',
+	-- 		'typescript',
+	-- 	},
+	-- 	requires = {
+	-- 		'leafgarland/typescript-vim',
+	-- 	},
+	-- }
 	-- use { 'kevinoid/vim-jsonc' }
 	use {
 		'kana/vim-textobj-user',
@@ -306,6 +381,39 @@ return require('packer').startup(function()
 			vim.api.nvim_set_keymap('o', 'ia', '<Plug>Argumentative_OpPendingInnerTextObject', { silent = true })
 			vim.api.nvim_set_keymap('o', 'aa', '<Plug>Argumentative_OpPendingOuterTextObject', { silent = true })
 		end,
+	}
+	use {
+		'NTBBloodbath/rest.nvim',
+		requires = { 'nvim-lua/plenary.nvim' },
+		ft = {
+			'http',
+			'rest',
+		},
+		config = function()
+			require('rest-nvim').setup({
+				-- Open request results in a horizontal split
+				-- result_split_horizontal = false,
+				-- Skip SSL verification, useful for unknown certificates
+				-- skip_ssl_verification = false,
+				-- Highlight request on run
+				highlight = {
+					enabled = true,
+					timeout = 150,
+				},
+				-- result = {
+				-- 	-- toggle showing URL, HTTP info, headers at top the of result window
+				-- 	show_url = true,
+				-- 	show_http_info = true,
+				-- 	show_headers = true,
+				-- },
+				-- Jump to request line on run
+				-- jump_to_request = false,
+				-- env_file = '.env',
+				-- custom_dynamic_variables = {},
+			})
+
+			vim.api.nvim_buf_set_keymap(0, 'n', '<leader>x', ':lua require("rest-nvim").run()<CR>', { noremap = true, silent = true })
+		end
 	}
 	use {
 		'nvim-telescope/telescope.nvim',
