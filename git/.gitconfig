@@ -22,3 +22,5 @@
 	name = Ganesha
 [github]
 	user = reekoheek
+[core]
+	editor = nvim

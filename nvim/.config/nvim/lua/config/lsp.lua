@@ -1,27 +1,28 @@
 local lspconfig = require 'lspconfig'
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.documentationFormat = { 'markdown' }
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.preselectSupport = true
-capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
-capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
-capabilities.textDocument.completion.completionItem.deprecatedSupport = true
-capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
-capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-	properties = {
-		'documentation',
-		'detail',
-		'additionalTextEdits',
-	},
-}
+-- capabilities.textDocument.completion.completionItem.documentationFormat = { 'markdown' }
+-- capabilities.textDocument.completion.completionItem.preselectSupport = true
+-- capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+-- capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
+-- capabilities.textDocument.completion.completionItem.deprecatedSupport = true
+-- capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
+-- capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
+-- capabilities.textDocument.completion.completionItem.resolveSupport = {
+-- 	properties = {
+-- 		'documentation',
+-- 		'detail',
+-- 		'additionalTextEdits',
+-- 	},
+-- }
+-- capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities());
 
 local servers = {
 	tsserver = {
-		filetypes = { 'typescript', 'typescriptreact' },
-		-- init_options = { documentFormatting = false },
-		-- root_dir = vim.loop.cwd,
+		on_attach = function(client)
+			client.resolved_capabilities.document_formatting = false
+		end
 	},
 	eslint = {},
 	jsonls = {
@@ -61,12 +62,39 @@ local servers = {
 			},
 		},
 	},
-	-- svelte = require('modules.lsp.svelte').config,
 	html = {},
 	cssls = {},
 	intelephense = { root_dir = vim.loop.cwd },
-	-- clangd = {},
 	gopls = {
+		on_attach = function(client)
+			client.resolved_capabilities.document_formatting = false
+			function goimports(timeoutms)
+				local context = { source = { organizeImports = true } }
+				vim.validate { context = { context, "t", true } }
+
+				local params = vim.lsp.util.make_range_params()
+				params.context = context
+
+				local method = "textDocument/codeAction"
+				local resp = vim.lsp.buf_request_sync(0, method, params, timeoutms)
+				if resp and resp[1] then
+					local result = resp[1].result
+					if result and result[1] then
+						local edit = result[1].edit
+						vim.lsp.util.apply_workspace_edit(edit)
+					end
+				end
+
+				vim.lsp.buf.formatting()
+			end
+
+			vim.cmd[[
+			augroup roh_goimports
+			au!
+			autocmd BufWritePre *.go lua goimports(1000)
+			augroup END
+			]]
+		end,
 		settings = {
 			gopls = {
 				codelenses = {
@@ -81,84 +109,20 @@ local servers = {
 		},
 	},
 	vimls = {},
-	-- jdtls = {},
 	pyright = {},
-	['null-ls'] = {},
-}
-
--- gopls
-
-function goimports(timeoutms)
-	local context = { source = { organizeImports = true } }
-	vim.validate { context = { context, "t", true } }
-
-	local params = vim.lsp.util.make_range_params()
-	params.context = context
-
-	local method = "textDocument/codeAction"
-	local resp = vim.lsp.buf_request_sync(0, method, params, timeoutms)
-	if resp and resp[1] then
-		local result = resp[1].result
-		if result and result[1] then
-			local edit = result[1].edit
-			vim.lsp.util.apply_workspace_edit(edit)
-		end
-	end
-
-	vim.lsp.buf.formatting()
-end
-
-vim.cmd[[
-augroup roh_goimports
-	au!
-	autocmd BufWritePre *.go lua goimports(1000)
-augroup END
-]]
-
--- null-ls
-
-local null_ls = require 'null-ls'
-local b = null_ls.builtins
-
--- vim.env.PRETTIERD_DEFAULT_CONFIG = vim.fn.stdpath 'config' .. '/.prettierrc'
-
-null_ls.config {
-	debounce = 150,
-	sources = {
-		-- b.diagnostics.eslint_d,
-		-- b.diagnostics.eslint.with {
-		-- 	command = 'eslint_d',
-		-- },
-		b.formatting.stylua.with {
-			args = {
-				'--config-path',
-				vim.fn.stdpath 'config' .. '/stylua.toml',
-				'-',
-			},
-		},
-		-- b.formatting.prettierd.with {
-		-- 	filetypes = {
-		-- 		'typescriptreact',
-		-- 		'typescript',
-		-- 		'javascriptreact',
-		-- 		'javascript',
-		-- 		'svelte',
-		-- 		'json',
-		-- 		'jsonc',
-		-- 		'css',
-		-- 		'html',
-		-- 	},
-		-- },
-	},
+	-- ['null-ls'] = {
+	-- 	pre_init = function(client)
+	-- 	end,
+	-- },
 }
 
 for name, opts in pairs(servers) do
 	if type(opts) == 'function' then
 		opts()
 	else
-		local on_attach = function(client)
-			if client.name == 'tsserver' then
-				client.resolved_capabilities.document_formatting = false
+		local on_attach = function(client, bufnr)
+			if opts.on_attach then
+				opts.on_attach(client, bufnr)
 			end
 
 			if client.resolved_capabilities.code_lens then
@@ -170,18 +134,37 @@ for name, opts in pairs(servers) do
 				]]
 			end
 
-			require 'lsp_signature'.on_attach()
+			local options = { noremap = true, silent = true }
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.type_definition()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', ':<C-u>lua require[[telescope.builtin]].lsp_references()<CR>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader><cr>', '<cmd>lua require("telescope.builtin").lsp_code_actions()<cr>', options)
+
+			-- require 'lsp_signature'.on_attach()
 		end
 
 		local on_init = function(client)
-			vim.notify('Language Server Client successfully started!', 'info', {
-				title = client.name,
-			})
+			if opts.on_init then
+				opts.on_init(client)
+			end
+			-- vim.notify('Language Server Client successfully started!', 'info', {
+			-- 	title = client.name,
+			-- })
+		end
+
+		if opts.pre_init then
+			opts.pre_init()
 		end
 
 		local client = lspconfig[name]
 		client.setup(vim.tbl_extend('force', {
-			flags = { debounce_text_changes = 150 },
+			-- flags = { debounce_text_changes = 150 },
 			on_attach = on_attach,
 			on_init = on_init,
 			capabilities = capabilities,
@@ -189,13 +172,3 @@ for name, opts in pairs(servers) do
 	end
 end
 
-local options = {
-	noremap = true,
-	silent = true,
-}
-vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<cr>', options)
-vim.api.nvim_set_keymap('n', 'gD', ':lua vim.lsp.buf.type_definition()<cr>', options)
-vim.api.nvim_set_keymap('n', ']g', ':lua vim.lsp.diagnostic.goto_next()<cr>', options)
-vim.api.nvim_set_keymap('n', '[g', ':lua vim.lsp.diagnostic.goto_prev()<cr>', options)
-vim.api.nvim_set_keymap('n', 'K', ':lua vim.lsp.buf.hover()<cr>', options)
-vim.api.nvim_set_keymap('n', '<leader><cr>', ':lua require("telescope.builtin").lsp_code_actions()<cr>', options)

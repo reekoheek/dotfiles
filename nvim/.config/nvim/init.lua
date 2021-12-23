@@ -66,7 +66,7 @@ vim.opt.laststatus = 2
 vim.opt.foldmethod = 'syntax'
 -- vim.opt.foldmethod = 'indent'
 vim.opt.foldlevelstart = 99
-vim.opt.completeopt = 'menuone,noselect'
+vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.clipboard = vim.loop.os_uname().sysname == 'Linux' and 'unnamedplus' or 'unnamed'
 
 vim.cmd[[
@@ -82,43 +82,44 @@ augroup END
 -- MAPS
 ----------------------------------------------------------------------------
 
-local map_opts = { noremap = true, silent = true }
+local opts = { noremap = true, silent = true }
 
-vim.api.nvim_set_keymap('', '<space>', '<nop>', map_opts)
+vim.api.nvim_set_keymap('', '<space>', '<nop>', opts)
 vim.g.mapleader = ' '
 
-vim.api.nvim_set_keymap('n', 'Q', '<nop>', map_opts)
-vim.api.nvim_set_keymap('n', 'Y', 'y$', map_opts)
-vim.api.nvim_set_keymap('', '<Up>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('', '<Down>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('', '<Left>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('', '<Right>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('i', '<Up>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('i', '<Down>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('i', '<Left>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('i', '<Right>', '<nop>', map_opts)
-vim.api.nvim_set_keymap('i', '<C-C>', '<esc>', map_opts)
-vim.api.nvim_set_keymap('n', 'n', 'nzzzv', map_opts)
-vim.api.nvim_set_keymap('n', 'N', 'Nzzzv', map_opts)
-vim.api.nvim_set_keymap('n', 'J', 'mzJ`z', map_opts)
-vim.api.nvim_set_keymap('n', '<A-j>', 'm +1<CR>==', map_opts)
-vim.api.nvim_set_keymap('n', '<A-k>', 'm -2<CR>==', map_opts)
-vim.api.nvim_set_keymap('i', '<A-j>', '<esc>:m +1<CR>==a', map_opts)
-vim.api.nvim_set_keymap('i', '<A-k>', '<esc>:m -2<CR>==a', map_opts)
-vim.api.nvim_set_keymap('v', '<A-j>', ':m \'>+1<CR>gv=gv', map_opts)
-vim.api.nvim_set_keymap('v', '<A-k>', ':m \'<-2<CR>gv=gv', map_opts)
-vim.api.nvim_set_keymap('i', ',', ',<C-g>u', map_opts)
-vim.api.nvim_set_keymap('i', '.', '.<C-g>u', map_opts)
-vim.api.nvim_set_keymap('i', '?', '?<C-g>u', map_opts)
-vim.api.nvim_set_keymap('i', '!', '!<C-g>u', map_opts)
-vim.api.nvim_set_keymap('n', '<C-L>', ':<C-u>let @/ = "" <Bar> nohl<CR><C-L>', map_opts)
-vim.api.nvim_set_keymap('n', 'g/', '<C-u>%s//g<Left><Left>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader><leader>', '<C-^>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>j', ':<C-u>bprev<CR>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>k', ':<C-u>bnext<CR>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>h', ':<C-u>bfirst<CR>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>l', ':<C-u>blast<CR>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>d', ':<C-u>bd<cr>', map_opts)
+vim.api.nvim_set_keymap('n', 'Q', '<nop>', opts)
+-- vim.api.nvim_set_keymap('n', 'Y', 'y$', opts)
+-- vim.api.nvim_set_keymap('', '<Up>', '<nop>', opts)
+-- vim.api.nvim_set_keymap('', '<Down>', '<nop>', opts)
+-- vim.api.nvim_set_keymap('', '<Left>', '<nop>', opts)
+-- vim.api.nvim_set_keymap('', '<Right>', '<nop>', opts)
+-- vim.api.nvim_set_keymap('i', '<Up>', '<nop>', opts)
+-- vim.api.nvim_set_keymap('i', '<Down>', '<nop>', opts)
+-- vim.api.nvim_set_keymap('i', '<Left>', '<nop>', opts)
+-- vim.api.nvim_set_keymap('i', '<Right>', '<nop>', opts)
+vim.api.nvim_set_keymap('i', '<C-C>', '<esc>', opts)
+vim.api.nvim_set_keymap('n', 'n', 'nzzzv', opts)
+vim.api.nvim_set_keymap('n', 'N', 'Nzzzv', opts)
+vim.api.nvim_set_keymap('n', 'J', 'mzJ`z', opts)
+vim.api.nvim_set_keymap('n', '<A-j>', 'm +1<CR>==', opts)
+vim.api.nvim_set_keymap('n', '<A-k>', 'm -2<CR>==', opts)
+vim.api.nvim_set_keymap('i', '<A-j>', '<esc>:m +1<CR>==a', opts)
+vim.api.nvim_set_keymap('i', '<A-k>', '<esc>:m -2<CR>==a', opts)
+vim.api.nvim_set_keymap('v', '<A-j>', ':m \'>+1<CR>gv=gv', opts)
+vim.api.nvim_set_keymap('v', '<A-k>', ':m \'<-2<CR>gv=gv', opts)
+vim.api.nvim_set_keymap('i', ',', ',<C-g>u', opts)
+vim.api.nvim_set_keymap('i', '.', '.<C-g>u', opts)
+vim.api.nvim_set_keymap('i', '?', '?<C-g>u', opts)
+vim.api.nvim_set_keymap('i', '!', '!<C-g>u', opts)
+vim.api.nvim_set_keymap('n', '<C-L>', ':<C-u>let @/ = "" <Bar> nohl<CR><C-L>', opts)
+vim.api.nvim_set_keymap('n', 'g/', '<C-u>%s//g<Left><Left>', opts)
+vim.api.nvim_set_keymap('n', '<leader><leader>', '<C-^>', opts)
+vim.api.nvim_set_keymap('n', '<leader>j', ':<C-u>bprev<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>k', ':<C-u>bnext<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>h', ':<C-u>bfirst<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>l', ':<C-u>blast<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>d', ':<C-u>bwipeout<cr>', opts)
+vim.api.nvim_set_keymap('n', '<leader>w', ':<C-u>w<cr>', opts)
 
 function p_find_files()
 	require('telescope.builtin').find_files({
@@ -132,12 +133,11 @@ function p_find_notes()
 	})
 end
 
-vim.api.nvim_set_keymap('n', '<leader>n', ':<C-u>lua p_find_notes()<CR>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>p', ':<C-u>lua p_find_files()<CR>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>f', ':<C-u>lua require("telescope.builtin").live_grep()<CR>', map_opts)
--- vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>lua require("telescope.builtin").file_browser({ hidden = true })<CR>', map_opts)
-vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>Explore<CR>', map_opts)
-vim.api.nvim_set_keymap('n', 'gr', ':<C-u>lua require[[telescope.builtin]].lsp_references()<CR>', map_opts)
+vim.api.nvim_set_keymap('n', '<leader>n', ':<C-u>lua p_find_notes()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>p', ':<C-u>lua p_find_files()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>f', ':<C-u>lua require("telescope.builtin").live_grep()<CR>', opts)
+-- vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>lua require("telescope.builtin").file_browser({ hidden = true })<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>Explore<CR>', opts)
 
 -- PLUGINS
 ----------------------------------------------------------------------------
@@ -245,6 +245,39 @@ return require('packer').startup(function()
 		event = 'BufRead',
 	}
 	use {
+		'steelsojka/pears.nvim',
+		event = 'BufRead',
+		config = function()
+			require 'pears'.setup()
+		end,
+	}
+	use {
+		'hrsh7th/nvim-cmp',
+		event = 'BufRead',
+		requires = {
+			{ 'onsails/lspkind-nvim', module = 'lspkind' },
+			{ 'hrsh7th/cmp-buffer', module = 'cmp_buffer' },
+			{ 'hrsh7th/cmp-path', module = 'cmp_path' },
+			{ 'hrsh7th/cmp-nvim-lsp', module = 'cmp_nvim_lsp' },
+			{ 'hrsh7th/cmp-nvim-lua', module = 'cmp_nvim_lua' },
+			-- { 'hrsh7th/cmp-calc', module = 'cmp_calc' },
+			-- { 'hrsh7th/cmp-emoji', module = 'cmp_emoji' },
+			{ 'rafamadriz/friendly-snippets' },
+			{ 'L3MON4D3/LuaSnip', module = 'luasnip' },
+			{ 'saadparwaiz1/cmp_luasnip', module = 'cmp_luasnip' },
+		},
+		config = function()
+			require'config.cmp'
+		end,
+	}
+	use {
+		'neovim/nvim-lspconfig',
+		after = 'nvim-cmp',
+		config = function()
+			require'config.lsp'
+		end,
+	}
+	use {
 		'mattn/emmet-vim',
 		ft = {
 			'html',
@@ -254,15 +287,6 @@ return require('packer').startup(function()
 			'javascript',
 			'typescript',
 		},
-	}
-	use {
-		'neovim/nvim-lspconfig',
-		requires = {
-			'jose-elias-alvarez/null-ls.nvim',
-		},
-		config = function()
-			require'config.lsp'
-		end,
 	}
 	-- use {
 	-- 	'fatih/vim-go',
@@ -317,37 +341,6 @@ return require('packer').startup(function()
 		-- 	vim.api.nvim_set_keymap('n', '<leader>x', ":DB<cr>", { noremap = true, silent = true })
 		-- end
 	}
-	use {
-		'hrsh7th/nvim-compe',
-		after = {
-			'nvim-lspconfig',
-		},
-		requires = {
-			'ray-x/lsp_signature.nvim',
-			'SirVer/ultisnips',
-			'cohama/lexima.vim',
-		},
-		event = 'InsertEnter',
-		config = function()
-			require'config.compe'
-		end,
-	}
-	-- use {
-	-- 	'cdata/vim-tagged-template',
-	-- 	-- ft = {
-	-- 	-- 	'javascript',
-	-- 	-- 	'typescript',
-	-- 	-- },
-	-- 	config = function()
-	-- 		vim.cmd[[
-	-- 		let g:taggedtemplate#tagSyntaxMap = {
-	-- 			  \ "html": "html",
-	-- 			  \ "md":   "markdown",
-	-- 			  \ "css":  "css" }
-	-- 		autocmd FileType javascript,typescript : call taggedtemplate#applySyntaxMap()
-	-- 		]]
-	-- 	end,
-	-- }
 	-- use {
 	-- 	'jonsmithers/vim-html-template-literals',
 	-- 	ft = {
@@ -358,7 +351,6 @@ return require('packer').startup(function()
 	-- 		'leafgarland/typescript-vim',
 	-- 	},
 	-- }
-	-- use { 'kevinoid/vim-jsonc' }
 	use {
 		'kana/vim-textobj-user',
 		event = 'BufRead',
@@ -414,6 +406,10 @@ return require('packer').startup(function()
 
 			vim.api.nvim_buf_set_keymap(0, 'n', '<leader>x', ':lua require("rest-nvim").run()<CR>', { noremap = true, silent = true })
 		end
+	}
+	use {
+		'github/copilot.vim',
+		event = 'BufRead',
 	}
 	use {
 		'nvim-telescope/telescope.nvim',
