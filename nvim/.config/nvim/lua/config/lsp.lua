@@ -19,6 +19,12 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 -- capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities());
 
 local servers = {
+	jdtls = {
+		cmd = { 'jdtls' },
+		root_dir = function(fname)
+			return lspconfig.util.root_pattern('pom.xml', 'gradle.build', '.git')(fname) or vim.fn.getcwd()
+		end,
+	},
 	tsserver = {
 		on_attach = function(client)
 			client.resolved_capabilities.document_formatting = false
@@ -144,7 +150,9 @@ for name, opts in pairs(servers) do
 			vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', options)
 			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', options)
 			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', ':<C-u>lua require[[telescope.builtin]].lsp_references()<CR>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua require[[telescope.builtin]].lsp_implementations()<cr>', options)
 			vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader><cr>', '<cmd>lua require("telescope.builtin").lsp_code_actions()<cr>', options)
+			vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<cr>', options)
 
 			-- require 'lsp_signature'.on_attach()
 		end

@@ -27,11 +27,11 @@ vim.opt.switchbuf = 'useopen'
 vim.opt.backspace = 'indent,eol,start'
 vim.opt.autoindent = true
 vim.opt.smartindent = true
-vim.opt.listchars = {
-	tab =  '▏ ',
-	trail =  '·',
-}
-vim.opt.list = true
+-- vim.opt.listchars = {
+-- 	tab =  '▏ ',
+-- 	trail =  '·',
+-- }
+-- vim.opt.list = true
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.inccommand = 'split'
@@ -63,9 +63,9 @@ vim.opt.ruler = false
 -- vim.opt.cmdheight = 2
 vim.opt.showtabline = 2
 vim.opt.laststatus = 2
-vim.opt.foldmethod = 'syntax'
+-- vim.opt.foldmethod = 'syntax'
 -- vim.opt.foldmethod = 'indent'
-vim.opt.foldlevelstart = 99
+-- vim.opt.foldlevel=99
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.clipboard = vim.loop.os_uname().sysname == 'Linux' and 'unnamedplus' or 'unnamed'
 
@@ -137,7 +137,8 @@ vim.api.nvim_set_keymap('n', '<leader>n', ':<C-u>lua p_find_notes()<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>p', ':<C-u>lua p_find_files()<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>f', ':<C-u>lua require("telescope.builtin").live_grep()<CR>', opts)
 -- vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>lua require("telescope.builtin").file_browser({ hidden = true })<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>Explore<CR>', opts)
+-- vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>Explore<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>NvimTreeToggle<CR>', opts)
 
 -- PLUGINS
 ----------------------------------------------------------------------------
@@ -152,7 +153,7 @@ end
 vim.cmd[[
 augroup roh_packer
 	autocmd!
-	autocmd BufWritePost init.lua source <afile> | PackerCompile
+	autocmd BufWritePost init.lua source <afile> | PackerCompile profile=true
 augroup end
 ]]
 
@@ -160,9 +161,19 @@ return require('packer').startup(function()
 	-- Packer can manage itself
 	use { 'wbthomason/packer.nvim' }
 	use {
+		'lukas-reineke/indent-blankline.nvim',
+		config = function()
+			require('indent_blankline').setup {
+				space_char_blankline = " ",
+				-- for example, context is off by default, use this to turn it on
+				show_current_context = true,
+				show_current_context_start = false,
+			}
+		end,
+	}
+	use {
 		'airblade/vim-rooter',
 		config = function()
-
 			vim.cmd[[
 			augroup roh_fix_autochdir
 				autocmd!
@@ -172,51 +183,85 @@ return require('packer').startup(function()
 			]]
 		end,
 	}
-	use {
-		'hoob3rt/lualine.nvim',
-		requires = { 'kyazdani42/nvim-web-devicons' },
-		after = 'gruvbox',
-		config = function()
-			require('lualine').setup({ theme = 'gruvbox' })
-		end,
-	}
-	use {
-		'akinsho/nvim-bufferline.lua',
-		requires = { 'kyazdani42/nvim-web-devicons' },
-		after = 'gruvbox',
-		config = function()
-			require("bufferline").setup{}
-		end,
-	}
+	-- use {
+	-- 	'ellisonleao/gruvbox.nvim',
+	-- 	requires = {"rktjmp/lush.nvim"},
+	-- 	config = function()
+	-- 		vim.o.background = "dark" -- or "light" for light mode
+	-- 		vim.cmd([[
+	-- 		colorscheme gruvbox
+	-- 		highlight Normal guibg=NONE ctermbg=NONE
+	-- 		augroup roh_gruvbox_fix
+	-- 			autocmd!
+	-- 			autocmd BufRead * highlight Normal guibg=NONE ctermbg=NONE
+	-- 		augroup END
+	-- 		]]
+	-- 	end,
+	-- }
 	use {
 		'morhetz/gruvbox',
+		-- event = 'BufRead',
 		config = function()
 			vim.g.gruvbox_transparent_bg = 1
 			vim.g.gruvbox_contrast_dark = 'hard'
 			vim.cmd([[
 			colorscheme gruvbox
 			highlight Normal guibg=NONE ctermbg=NONE
+			augroup roh_gruvbox_fix
+				autocmd!
+				autocmd BufRead * highlight Normal guibg=NONE ctermbg=NONE
+			augroup END
 			]])
+		end,
+	}
+	use {
+		'hoob3rt/lualine.nvim',
+		requires = { 'kyazdani42/nvim-web-devicons' },
+		config = function()
+			require('lualine').setup({ theme = 'gruvbox' })
+		end,
+	}
+	use {
+		'kyazdani42/nvim-tree.lua',
+		requires = { 'kyazdani42/nvim-web-devicons' },
+		config = function()
+			require'nvim-tree'.setup {
+				update_focused_file = {
+					enable      = true,
+				},
+				view = {
+					width = 40,
+					side = 'right',
+				},
+			}
+		end
+	}
+	use {
+		'akinsho/nvim-bufferline.lua',
+		requires = { 'kyazdani42/nvim-web-devicons' },
+		config = function()
+			require("bufferline").setup{}
 		end,
 	}
 	-- use { 'sheerun/vim-polyglot' }
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate',
-		after = 'gruvbox',
-		event = 'BufRead',
 		config = function()
 			require'nvim-treesitter.configs'.setup {
 				ensure_installed = 'maintained',
 				indent = { enable = true },
 				highlight = { enable = true }
 			}
+
+			vim.opt.foldmethod = 'expr'
+			vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+			vim.opt.foldlevel = 99
 		end,
 	}
 	use {
 		'lewis6991/gitsigns.nvim',
 		requires = { 'nvim-lua/plenary.nvim' },
-		after = 'gruvbox',
 		event = 'BufRead',
 		config = function()
 			require('gitsigns').setup()
@@ -228,7 +273,7 @@ return require('packer').startup(function()
 	}
 	use {
 		'tpope/vim-commentary',
-		event = 'BufRead',
+		-- event = 'BufRead',
 		config = function()
 			vim.cmd[[
 			augroup roh_fix_comments
@@ -253,7 +298,6 @@ return require('packer').startup(function()
 	}
 	use {
 		'hrsh7th/nvim-cmp',
-		event = 'BufRead',
 		requires = {
 			{ 'onsails/lspkind-nvim', module = 'lspkind' },
 			{ 'hrsh7th/cmp-buffer', module = 'cmp_buffer' },
@@ -279,6 +323,7 @@ return require('packer').startup(function()
 	}
 	use {
 		'mattn/emmet-vim',
+		event = 'BufRead',
 		ft = {
 			'html',
 			'php',
@@ -291,49 +336,49 @@ return require('packer').startup(function()
 	-- use {
 	-- 	'fatih/vim-go',
 	-- }
-	use {
-		'mfussenegger/nvim-jdtls',
-		config = function()
-			vim.cmd[[
-			augroup roh_jdtlsp
-				autocmd!
-				autocmd FileType java lua require('jdtls').start_or_attach({ cmd = {'jdt-lsp'} })
-			augroup end
-			]]
+	-- use {
+	-- 	'mfussenegger/nvim-jdtls',
+	-- 	config = function()
+	-- 		vim.cmd[[
+	-- 		augroup roh_jdtlsp
+	-- 			autocmd!
+	-- 			autocmd FileType java lua require('jdtls').start_or_attach({ cmd = {'jdtls'} })
+	-- 		augroup end
+	-- 		]]
 
-			local finders = require'telescope.finders'
-			local sorters = require'telescope.sorters'
-			local actions = require'telescope.actions'
-			local pickers = require'telescope.pickers'
-			require('jdtls.ui').pick_one_async = function(items, prompt, label_fn, cb)
-				local opts = {}
-				pickers.new(opts, {
-					prompt_title = prompt,
-					finder    = finders.new_table {
-						results = items,
-						entry_maker = function(entry)
-							return {
-								value = entry,
-								display = label_fn(entry),
-								ordinal = label_fn(entry),
-							}
-						end,
-					},
-					sorter = sorters.get_generic_fuzzy_sorter(),
-					attach_mappings = function(prompt_bufnr)
-						actions.select_default:replace(function()
-							local selection = actions.get_selected_entry(prompt_bufnr)
-							actions.close(prompt_bufnr)
+	-- 		local finders = require'telescope.finders'
+	-- 		local sorters = require'telescope.sorters'
+	-- 		local actions = require'telescope.actions'
+	-- 		local pickers = require'telescope.pickers'
+	-- 		require('jdtls.ui').pick_one_async = function(items, prompt, label_fn, cb)
+	-- 			local opts = {}
+	-- 			pickers.new(opts, {
+	-- 				prompt_title = prompt,
+	-- 				finder    = finders.new_table {
+	-- 					results = items,
+	-- 					entry_maker = function(entry)
+	-- 						return {
+	-- 							value = entry,
+	-- 							display = label_fn(entry),
+	-- 							ordinal = label_fn(entry),
+	-- 						}
+	-- 					end,
+	-- 				},
+	-- 				sorter = sorters.get_generic_fuzzy_sorter(),
+	-- 				attach_mappings = function(prompt_bufnr)
+	-- 					actions.select_default:replace(function()
+	-- 						local selection = actions.get_selected_entry(prompt_bufnr)
+	-- 						actions.close(prompt_bufnr)
 
-							cb(selection.value)
-						end)
+	-- 						cb(selection.value)
+	-- 					end)
 
-						return true
-					end,
-				}):find()
-			end
-		end,
-	}
+	-- 					return true
+	-- 				end,
+	-- 			}):find()
+	-- 		end
+	-- 	end,
+	-- }
 	use { 'tpope/vim-dadbod' }
 	use {
 		'kristijanhusak/vim-dadbod-ui',
@@ -435,11 +480,10 @@ return require('packer').startup(function()
 					},
 					prompt_prefix = '🔍',
 				},
-			})
+		})
 		end,
 	}
 	use { 'dstein64/vim-startuptime' }
 	use { 'farmergreg/vim-lastplace' }
 	use { 'tpope/vim-obsession' } -- must be last
 end)
-

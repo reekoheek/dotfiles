@@ -20,6 +20,10 @@ if test -d "$HOME/bin"
 	set -a PATH "$HOME/bin"
 end
 
+if test -d "$HOME/.local/bin"
+	set -a PATH "$HOME/.local/bin"
+end
+
 #--- ANDROID
 
 if test -d "$HOME/Library/Android/sdk"
@@ -64,7 +68,7 @@ set -a PATH "$GOPATH/bin"
 
 if test -d "$HOME/.jenv"
 	set -x JAVA_HOME (jenv javahome)
-	set -x JDTLS_HOME ~/opt/jdt-language-server
+#	set -x JDTLS_HOME ~/opt/jdt-language-server
 #	set -a PATH "$HOME/.jenv/bin"
 #	# status --is-interactive; and source (jenv init -|psub)
 end
