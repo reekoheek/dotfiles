@@ -1,6 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
-SETUVAR __fish_initialized:3100
+SETUVAR __fish_initialized:3400
 SETUVAR _fisher_JGAntunes_2F_fish_2D_gvm_files:/Users/reekoheek/\x2econfig/fish/functions/gvm\x2efish\x1e/Users/reekoheek/\x2econfig/fish/conf\x2ed/gvm\x2efish
 SETUVAR _fisher_PatrickF1_2F_fzf_2E_fish_files:/Users/reekoheek/\x2econfig/fish/functions/_fzf_configure_bindings_help\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_extract_var_info\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_preview_file\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_report_file_type\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_search_directory\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_search_git_log\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_search_git_status\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_search_history\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/_fzf_search_variables\x2efish\x1e/Users/reekoheek/\x2econfig/fish/functions/fzf_configure_bindings\x2efish\x1e/Users/reekoheek/\x2econfig/fish/conf\x2ed/fzf\x2efish\x1e/Users/reekoheek/\x2econfig/fish/completions/fzf_configure_bindings\x2efish
 SETUVAR _fisher_edc_2F_bass_files:/Users/reekoheek/\x2econfig/fish/functions/__bass\x2epy\x1e/Users/reekoheek/\x2econfig/fish/functions/bass\x2efish
@@ -36,5 +36,6 @@ SETUVAR fish_pager_color_completion:normal
 SETUVAR fish_pager_color_description:B3A06D\x1eyellow
 SETUVAR fish_pager_color_prefix:normal\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
+SETUVAR fish_pager_color_selected_background:\x2dr
 SETUVAR nvm_data:/Users/reekoheek/\x2elocal/share/nvm
 SETUVAR nvm_mirror:https\x3a//nodejs\x2eorg/dist
