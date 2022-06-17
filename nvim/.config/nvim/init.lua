@@ -249,7 +249,7 @@ return require('packer').startup(function()
 		run = ':TSUpdate',
 		config = function()
 			require'nvim-treesitter.configs'.setup {
-				ensure_installed = 'maintained',
+				ensure_installed = 'all',
 				indent = { enable = true },
 				highlight = { enable = true }
 			}
@@ -287,7 +287,7 @@ return require('packer').startup(function()
 	}
 	use {
 		'editorconfig/editorconfig-vim',
-		event = 'BufRead',
+		-- event = 'BufRead',
 	}
 	use {
 		'steelsojka/pears.nvim',

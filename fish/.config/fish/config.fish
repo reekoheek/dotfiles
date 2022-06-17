@@ -29,7 +29,7 @@ end
 if test -d "$HOME/Library/Android/sdk"
 	set -x ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
 	set -x ANDROID_HOME "$HOME/Library/Android/sdk"
-	set -p PATH "$ANDROID_HOME/platform-tools" "$ANDROID_HOME/tools/bin"
+	set -p PATH "$ANDROID_HOME/platform-tools" "$ANDROID_HOME/cmdline-tools/latest/bin"
 end
 
 #--- BAT
@@ -43,6 +43,7 @@ set -x BAT_THEME "gruvbox-dark"
 
 #--- FLUTTER
 
+set -x CHROME_EXECUTABLE "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
 if test -d "$HOME/opt/flutter"
 	set -a PATH "$HOME/opt/flutter/bin"
 end
