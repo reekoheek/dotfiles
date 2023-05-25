@@ -315,6 +315,7 @@ return require('packer').startup(function()
 		end,
 	}
 	use {
+		'williamboman/nvim-lsp-installer',
 		'neovim/nvim-lspconfig',
 		after = 'nvim-cmp',
 		config = function()
@@ -344,9 +345,9 @@ return require('packer').startup(function()
 			'typescript',
 		},
 	}
-	-- use {
-	-- 	'fatih/vim-go',
-	-- }
+	use {
+		'fatih/vim-go',
+	}
 	-- use {
 	-- 	'mfussenegger/nvim-jdtls',
 	-- 	config = function()
@@ -462,10 +463,6 @@ return require('packer').startup(function()
 
 			vim.api.nvim_buf_set_keymap(0, 'n', '<leader>x', ':lua require("rest-nvim").run()<CR>', { noremap = true, silent = true })
 		end
-	}
-	use {
-		'github/copilot.vim',
-		event = 'BufRead',
 	}
 	use {
 		'nvim-telescope/telescope.nvim',

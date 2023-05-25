@@ -36,10 +36,22 @@ end
 
 set -x BAT_THEME "gruvbox-dark"
 
+#--- CURL
+
+if test -d "/usr/local/opt/curl/bin"
+	fish_add_path /usr/local/opt/curl/bin
+end
+
 #--- DOCKER
 
 # set -x COMPOSE_DOCKER_CLI_BUILD 1
 # set -x DOCKER_BUILDKIT 1
+
+#--- DOTNET
+
+
+set -x DOTNET_ROOT "/usr/local/share/dotnet"
+set -a PATH "$DOTNET_ROOT"
 
 #--- FLUTTER
 
@@ -73,6 +85,14 @@ if test -d "$HOME/.jenv"
 #	set -a PATH "$HOME/.jenv/bin"
 #	# status --is-interactive; and source (jenv init -|psub)
 end
+
+#-- JBANG
+
+if test -d "$HOME/.jbang"
+	alias j!=jbang
+	set -a PATH "$HOME/.jbang/bin"
+end
+
 
 #--- MYSQL
 
@@ -109,3 +129,8 @@ if status is-interactive
 	alias g=git
 	alias ssh="kitty +kitten ssh"
 end
+
+# bun
+set -Ux BUN_INSTALL "/Users/reekoheek/.bun"
+fish_add_path "/Users/reekoheek/.bun/bin"
+

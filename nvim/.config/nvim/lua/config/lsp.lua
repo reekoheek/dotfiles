@@ -1,3 +1,4 @@
+require('nvim-lsp-installer').setup {}
 local lspconfig = require 'lspconfig'
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -27,7 +28,7 @@ local servers = {
 	},
 	tsserver = {
 		on_attach = function(client)
-			client.resolved_capabilities.document_formatting = false
+			client.server_capabilities.document_formatting = false
 		end
 	},
 	eslint = {},
@@ -72,35 +73,35 @@ local servers = {
 	cssls = {},
 	intelephense = { root_dir = vim.loop.cwd },
 	gopls = {
-		on_attach = function(client)
-			client.resolved_capabilities.document_formatting = false
-			function goimports(timeoutms)
-				local context = { source = { organizeImports = true } }
-				vim.validate { context = { context, "t", true } }
+		-- on_attach = function(client)
+		-- 	client.server_capabilities.document_formatting = false
+		-- 	function goimports(timeoutms)
+		-- 		local context = { source = { organizeImports = true } }
+		-- 		vim.validate { context = { context, "t", true } }
 
-				local params = vim.lsp.util.make_range_params()
-				params.context = context
+		-- 		local params = vim.lsp.util.make_range_params()
+		-- 		params.context = context
 
-				local method = "textDocument/codeAction"
-				local resp = vim.lsp.buf_request_sync(0, method, params, timeoutms)
-				if resp and resp[1] then
-					local result = resp[1].result
-					if result and result[1] then
-						local edit = result[1].edit
-						vim.lsp.util.apply_workspace_edit(edit)
-					end
-				end
+		-- 		local method = "textDocument/codeAction"
+		-- 		local resp = vim.lsp.buf_request_sync(0, method, params, timeoutms)
+		-- 		if resp and resp[1] then
+		-- 			local result = resp[1].result
+		-- 			if result and result[1] then
+		-- 				local edit = result[1].edit
+		-- 				vim.lsp.util.apply_workspace_edit(edit)
+		-- 			end
+		-- 		end
 
-				vim.lsp.buf.formatting()
-			end
+		-- 		vim.lsp.buf.formatting()
+		-- 	end
 
-			vim.cmd[[
-			augroup roh_goimports
-			au!
-			autocmd BufWritePre *.go lua goimports(1000)
-			augroup END
-			]]
-		end,
+		-- 	vim.cmd[[
+		-- 	augroup roh_goimports
+		-- 	au!
+		-- 	autocmd BufWritePre *.go lua goimports(1000)
+		-- 	augroup END
+		-- 	]]
+		-- end,
 		settings = {
 			gopls = {
 				codelenses = {
@@ -131,7 +132,7 @@ for name, opts in pairs(servers) do
 				opts.on_attach(client, bufnr)
 			end
 
-			if client.resolved_capabilities.code_lens then
+			if client.server_capabilities.code_lens then
 				vim.cmd [[
 				augroup roh_codelens
 				au!
