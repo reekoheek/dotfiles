@@ -1,4 +1,4 @@
-﻿vim.opt.compatible = false
+vim.opt.compatible = false
 vim.opt.history = 1000
 vim.opt.mouse = 'a'
 vim.opt.ttyfast = true
@@ -495,3 +495,4 @@ return require('packer').startup(function()
 	use { 'farmergreg/vim-lastplace' }
 	use { 'tpope/vim-obsession' } -- must be last
 end)
+
