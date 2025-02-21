@@ -1,0 +1,156 @@
+awesome: &awesome Font Awesome 6 Free:style=solid:pixelsize=14
+
+# This is THE bar configuration
+bar:
+  location: top
+  height: 30
+  spacing: 5
+  margin: 5
+
+  # Default font
+  font: JetBrains Mono:pixelsize=15
+
+  foreground: ffffffff
+  background: 000000ff
+
+  # border:
+  #   width: 1
+  #   color: 999999cc
+  #   margin: 0
+
+  left:
+    - xwindow:
+        content:
+          string: {text: "{title}"}
+  center:
+    - clock:
+        date-format: "%Y-%m-%d"
+        time-format: "%H:%M:%S"
+        content:
+          - string: {text: "{date} {time}"}
+
+  right:
+    - cpu:
+        poll-interval: 10000
+        content:
+          map:
+            on-click: gnome-system-monitor
+            conditions:
+              id < 0:
+                - string: {text: microchip, font: *awesome}
+                - string: {text: "{cpu}%"}
+
+    - mem:
+        poll-interval: 10000
+        content:
+          list:
+            on-click: gnome-system-monitor
+            items:
+              - string: {text: memory, font: *awesome}
+              - string: {text: "{used:mb}MB"}
+
+    - network:
+        name: en1
+        content:
+          map:
+            default: {empty: {}}
+            conditions:
+              name == en1:
+                map:
+                  conditions:
+                    ~carrier: {empty: {}}
+                    carrier:
+                      map:
+                        default: {string: {text: , font: *awesome, foreground: ffffff66}}
+                        conditions:
+                          state == up && ipv4 != "": {string: {text: , font: *awesome}}
+    - network:
+        name: wlo1
+        # poll-interval: 5000
+        content:
+          map:
+            default: {empty: {}}
+            conditions:
+              name == wlo1:
+                map:
+                  default: {string: {text: , font: *awesome, foreground: ffffff66}}
+                  conditions:
+                    state == down: {string: {text: , font: *awesome, foreground: ff0000ff}}
+                    state == up:
+                      map:
+                        default:
+                          - string: {text: , font: *awesome}
+                          - string: {text: "{ssid}"}
+
+                        conditions:
+                          ipv4 == "":
+                            - string: {text: , font: *awesome, foreground: ffffff66}
+                            - string: {text: "{ssid}", foreground: ffffff66}
+    - backlight:
+        name: intel_backlight
+        content:
+          - string: {text: , font: *awesome}
+          - string: {text: "{percent}%"}
+    - pulse:
+        content:
+          - map:
+              on-click: pavucontrol
+              default:
+                - string: {text: , font: *awesome}
+                - string: {text: "{sink_percent}%"}
+              conditions:
+                sink_muted:
+                  - string: {text: , font: *awesome, foreground: ff0000ff}
+                  - string: {text: "{sink_percent}%", foreground: ff0000ff}
+                sink_percent == 0:
+                  - string: {text: , font: *awesome, foreground: ffffff66}
+                  - string: {text: "{sink_percent}%", foreground: ffffff66}
+                sink_percent < 70:
+                  - string: {text: , font: *awesome}
+                  - string: {text: "{sink_percent}%"}
+                sink_percent > 100:
+                  - string: {text: , font: *awesome, foreground: ffff00ff}
+                  - string: {text: "{sink_percent}%", foreground: ffff00ff}
+
+    - battery:
+        name: BAT0
+        poll-interval: 10000
+        content:
+          map:
+            on-click: gnome-power-statistics
+            default:
+              - string: {text: , font: *awesome}
+              - string: {text: "{capacity}%({estimate})"}
+            conditions:
+              state == charging:
+                - string: {text: , foreground: 00ff00ff, font: *awesome}
+                - string: {text: "{capacity}%({estimate})", foreground: 00ff00ff}
+              capacity <= 20:
+                - string: {text: , foreground: ff0000ff, font: *awesome}
+                - string: {text: "{capacity}%({estimate})", foreground: ff0000ff}
+              capacity <= 50:
+                - string: {text: , foreground: ffff00ff, font: *awesome}
+                - string: {text: "{capacity}%({estimate})", foreground: ffff00ff}
+              state == full:
+                - string: {text: , foreground: 00ff00ff, font: *awesome}
+                - string: {text: "{capacity}%(full)", foreground: 00ff00ff}
+    - script:
+        path: ~/scripts/caffeine.sh
+        args: ["yambar"]
+        content:
+          map:
+            on-click: ~/scripts/caffeine.sh toggle
+            conditions:
+              status == "on":
+                - string: {text: , font: *awesome, foreground: 00ff00ff}
+                - string: {text: "ON ", foreground: 00ff00ff}
+              status == "off":
+                - string: {text: , font: *awesome}
+                - string: {text: "OFF"}
+    - script:
+        poll-interval: 10000
+        path: ~/scripts/yambar-tray-width.sh
+        content:
+          - string: {text: "|{padding}"}
+
+

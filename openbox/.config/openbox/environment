@@ -1,0 +1,6 @@
+export DESKTOP_THEME=dark
+export GTK_THEME=Yaru-red-dark
+export GTK_ICON_THEME=Yaru-red-dark
+export XCURSOR_SIZE=64
+
+

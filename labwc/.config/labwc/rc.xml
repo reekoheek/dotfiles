@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<labwc_config>
+	<theme>
+		<name>Nightmare-01</name>
+		<cornerRadius>8</cornerRadius>
+		<keepBorder>no</keepBorder>
+		<dropShadows>yes</dropShadows>
+	</theme>
+
+	<desktops>
+		<number>4</number>
+		<firstdesk>1</firstdesk>
+		<names>
+			<name>D1</name>
+			<name>D2</name>
+			<name>D3</name>
+			<name>D4</name>
+		</names>
+		<popupTime>875</popupTime>
+	</desktops>
+
+	<keyboard>
+		<default />
+
+
+		<keybind key="C-1">
+			<action name="Execute">
+				<command>
+					amixer set Master toggle
+				</command>
+			</action>
+		</keybind>
+
+		<keybind key="C-2">
+			<action name="Execute">
+				<command>
+					amixer set Master 5%-
+				</command>
+			</action>
+		</keybind>
+
+		<keybind key="C-3">
+			<action name="Execute">
+				<command>
+					amixer set Master 5%+
+				</command>
+			</action>
+		</keybind>
+
+		<keybind key="C-4">
+			<action name="Execute">
+				<command>
+					brightnessctl set 5%-
+				</command>
+			</action>
+		</keybind>
+
+		<keybind key="C-5">
+			<action name="Execute">
+				<command>
+					brightnessctl set +5%
+				</command>
+			</action>
+		</keybind>
+
+		<keybind key="XF86_MonBrightnessUp">
+			<action name="Execute" command="brightnessctl set +5%" />
+		</keybind>
+
+		<keybind key="XF86_MonBrightnessDown">
+			<action name="Execute" command="brightnessctl set 5%-" />
+		</keybind>
+
+		<keybind key="W-Return">
+			<action name="Execute" command="foot" />
+		</keybind>
+
+		<keybind key="W-r">
+			<action name="Reconfigure" />
+		</keybind>
+
+		<keybind key="W-t">
+			<action name="show-window-menu" />
+		</keybind>
+
+		<!--<keybind key="W-Space">-->
+		<!--	<action name="Execute" command="ulauncher-toggle" />-->
+		<!--</keybind>-->
+
+		<keybind key="W-Space">
+			<action name="Execute" command="fuzzel" />
+		</keybind>
+
+		<keybind key="W-d">
+			<action name="Execute">
+				<command>
+					sh -c 'wlrctl toplevel minimize state:inactive &amp;&amp; wlrctl toplevel minimize state:active'
+				</command>
+			</action>
+		</keybind>
+
+		<keybind key="W-l">
+			<action name="Execute" command="swaylock" />
+		</keybind>
+
+		<keybind key="C-A-Delete">
+			<action name="Exit" />
+		</keybind>
+
+		<keybind key="C-A-Left">
+			<action name="GoToDesktop" to="left" />
+		</keybind>
+
+		<keybind key="C-A-Right">
+			<action name="GoToDesktop" to="right" />
+		</keybind>
+
+		<keybind key="S-A-Left">
+			<action name="SendToDesktop" to="left" />
+		</keybind>
+
+		<keybind key="S-A-Right">
+			<action name="SendToDesktop" to="right" />
+		</keybind>
+
+		<keybind key="S-A-3">
+			<action name="Execute" command="grim" />
+		</keybind>
+
+		<keybind key="S-A-4">
+			<action name="Execute">
+				<command>
+					sh -c 'grim -g "$(slurp)"'
+				</command>
+			</action>
+		</keybind>
+	</keyboard>
+
+	<mouse>
+		<default />
+		<context name="Root">
+			<mousebind button="Right" action="Press">
+				<action name="ShowMenu" menu="some-custom-menu" />
+			</mousebind>
+		</context>
+	</mouse>
+
+	<libinput>
+		<device category="default">
+			<naturalScroll>yes</naturalScroll>
+		</device>
+	</libinput>
+
+</labwc_config>
+

@@ -1,0 +1,14 @@
+wlr-randr --output eDP-1 --custom-mode 2560x1600@120 > /dev/null 2>&1 &
+#wlr-randr --output eDP-1 --custom-mode 1920x1200@120 > /dev/null 2>&1 &
+
+swaybg -m center -i ~/Pictures/semar3.png > /dev/null 2>&1 &
+yambar > /dev/null 2>&1 &
+
+libinput-gestures > /dev/null 2>&1 &
+
+swayidle -w \
+	timeout 180 'swaylock -f' \
+	timeout 180 'brightnessctl set 0%' \
+	timeout 300 '~/.config/swaylock/scripts/suspend.sh' \
+	resume 'brightnessctl set 5%' \
+	before-sleep 'swaylock -f' >/dev/null 2>&1 &

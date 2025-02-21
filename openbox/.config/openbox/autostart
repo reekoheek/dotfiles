@@ -1,0 +1,22 @@
+xrandr --output eDP-1 --mode 2560x1600 > /dev/null 2>&1 &
+# xrandr --output eDP-1 --mode 1920x1200 > /dev/null 2>&1 &
+
+setxkbmap -option caps:escape > /dev/null 2>&1 &
+
+picom > /dev/null 2>&1 &
+
+feh --bg-center ~/Pictures/semar3.png > /dev/null 2>&1 &
+yambar -c ~/.config/yambar/openbox-config.yml > /dev/null 2>&1 &
+
+trayer --edge top --align right --widthtype request --SetDockType true --height 20 --transparent true --tint 000000 --iconspacing 6 --distance 3 --margin 5 > /dev/null 2>&1 &
+
+libinput-gestures > /dev/null 2>&1 &
+# xinput set-prop 12 "libinput Accel Speed" 0.5
+unclutter-xfixes --timeout 3 > /dev/null 2>&1 &
+
+xset s 180
+xset dpms 0 0 180
+xss-lock --transfer-sleep-lock -- i3lock --nofork -c 000000 > /dev/null 2>&1 &
+
+dunst > /dev/null 2>&1 &
+

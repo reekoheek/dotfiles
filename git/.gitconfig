@@ -24,3 +24,5 @@
 	user = reekoheek
 [core]
 	editor = nvim
+[http]
+	postBuffer = 157286400
