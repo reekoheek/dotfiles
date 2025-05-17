@@ -1,11 +1,5 @@
-# Typical laptop setup, with wifi, brightness, battery etc, for
-# i3/Sway.
-
-# For X11/i3, you'll want to replace calls to swaymsg with i3-msg, and
-# the sway-xkb module with the xkb module.
-
-# fonts we'll be re-using here and there
-awesome: &awesome Font Awesome 6 Free:style=solid:pixelsize=14
+awesome: &awesome Font Awesome 6 Free:style=solid:pixelsize=16
+small: &small JetBrains Mono:pixelsize=14
 
 # This is THE bar configuration
 bar:
@@ -13,10 +7,7 @@ bar:
   height: 30
   spacing: 5
   margin: 5
-
-  # Default font
   font: JetBrains Mono:pixelsize=15
-
   foreground: ffffffff
   background: 000000ff
 
@@ -26,35 +17,48 @@ bar:
   #   margin: 0
 
   left:
-    - foreign-toplevel:
+    - xwindow:
         content:
-          map:
-            conditions:
-              ~activated: {empty: {}}
-              activated:
-                - string: {text: "{app-id}", foreground: ffa0a0ff}
-                - string: {text: ": {title}"}
-  center:
-    - clock:
-        date-format: "%Y-%m-%d"
-        content:
-          - string: {text: "{date} {time}"}
+          - string: {text: "{application}", foreground: ffff00ff}
+          - string: {text: " {title}", font: *small}
+
+  # center:
 
   right:
     - cpu:
-        poll-interval: 5000
+        poll-interval: 10000
         content:
           map:
+            on-click: gnome-system-monitor
             conditions:
               id < 0:
-                - string: {text: microchip, font: *awesome}
-                - string: {text: "{cpu}%"}
+                map:
+                  default:
+                    - string: {text: , font: *awesome}
+                    - string: {text: "{cpu}%"}
+                  conditions:
+                    cpu >= 75:
+                      - string: {text: , font: *awesome, foreground: ff0000ff}
+                      - string: {text: "{cpu}%", foreground: ff0000ff}
+                    cpu >= 50:
+                      - string: {text: , font: *awesome, foreground: ffff00ff}
+                      - string: {text: "{cpu}%", foreground: ffff00ff}
 
     - mem:
-        poll-interval: 5000
+        poll-interval: 10000
         content:
-          - string: {text: memory, font: *awesome}
-          - string: {text: "{used:mb}MB"}
+          map:
+            on-click: gnome-system-monitor
+            default:
+              - string: {text: , font: *awesome}
+              - string: {text: "{used:mb}MB"}
+            conditions:
+              percent_used >= 90:
+                - string: {text: , font: *awesome, foreground: ff0000ff}
+                - string: {text: "{used:mb}MB", foreground: ff0000ff}
+              percent_used >= 75:
+                - string: {text: , font: *awesome, foreground: ffff00ff}
+                - string: {text: "{used:mb}MB", foreground: ffff00ff}
 
     - network:
         name: en1
@@ -73,7 +77,6 @@ bar:
                           state == up && ipv4 != "": {string: {text: , font: *awesome}}
     - network:
         name: wlo1
-        poll-interval: 5000
         content:
           map:
             default: {empty: {}}
@@ -82,7 +85,7 @@ bar:
                 map:
                   default: {string: {text: , font: *awesome, foreground: ffffff66}}
                   conditions:
-                    state == down: {string: {text: , font: *awesome, foreground: ff0000ff}}
+                    state == down: {string: {text: , font: *awesome, foreground: ff0000ff}}
                     state == up:
                       map:
                         default:
@@ -98,85 +101,78 @@ bar:
         content:
           - string: {text: , font: *awesome}
           - string: {text: "{percent}%"}
-    - pipewire:
+    - pulse:
         content:
-          map:
-            on-click: pavucontrol
-            conditions:
-              type == "sink":
-                map:
-                  conditions:
-                    muted:
-                      - string: {text: , font: *awesome, foreground: ff0000ff}
-                      - string: {text: "{linear_volume}%", foreground: ff0000ff}
-                  default:
-                    - ramp:
-                        tag: linear_volume
-                        items:
-                          - string: {text: , font: *awesome}
-                          - string: {text: , font: *awesome}
-                    - string: {text: "{linear_volume}%"}
+          - map:
+              on-click: pavucontrol
+              default:
+                - string: {text: , font: *awesome}
+                - string: {text: "{sink_percent}%"}
+              conditions:
+                sink_muted:
+                  - string: {text: , font: *awesome, foreground: ff0000ff}
+                  - string: {text: "{sink_percent}%", foreground: ff0000ff}
+                sink_percent == 0:
+                  - string: {text: , font: *awesome}
+                  - string: {text: "{sink_percent}%"}
+                sink_percent < 70:
+                  - string: {text: , font: *awesome}
+                  - string: {text: "{sink_percent}%"}
+                sink_percent > 100:
+                  - string: {text: , font: *awesome, foreground: ffff00ff}
+                  - string: {text: "{sink_percent}%", foreground: ffff00ff}
 
     - battery:
         name: BAT0
-        poll-interval: 30000
-        anchors:
-          discharging: &discharging
-            list:
-              items:
-                - ramp:
-                    tag: capacity
-                    items:
-                      - string: {text: , foreground: ff0000ff, font: *awesome}
-                      - string: {text: , foreground: ffa600ff, font: *awesome}
-                      - string: {text: , font: *awesome}
-                      - string: {text: , font: *awesome}
-                      - string: {text: , font: *awesome}
-                      - string: {text: , font: *awesome}
-                      - string: {text: , font: *awesome}
-                      - string: {text: , font: *awesome}
-                      - string: {text: , font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                - string: {text: "{capacity}% {estimate}"}
+        poll-interval: 60000
         content:
           map:
+            on-click: gnome-power-statistics
+            default:
+              - string: {text: , font: *awesome}
+              - string: {text: "{capacity}% {estimate}"}
             conditions:
-              state == unknown:
-                <<: *discharging
-              state == discharging:
-                <<: *discharging
+              state == charging && capacity >= 95:
+                - string: {text: , foreground: 00ff00ff, font: *awesome}
+                - string: {text: "{capacity}% {estimate}", foreground: 00ff00ff}
               state == charging:
-                - string: {text: , foreground: 00ff00ff, font: *awesome}
+                - string: {text: , font: *awesome}
                 - string: {text: "{capacity}% {estimate}"}
+              capacity <= 15:
+                - string: {text: , foreground: ff0000ff, font: *awesome}
+                - string: {text: "{capacity}% {estimate}", foreground: ff0000ff}
+              capacity <= 50:
+                - string: {text: , foreground: ffff00ff, font: *awesome}
+                - string: {text: "{capacity}% {estimate}", foreground: ffff00ff}
               state == full:
                 - string: {text: , foreground: 00ff00ff, font: *awesome}
-                - string: {text: "{capacity}% full"}
-              state == "not charging":
-                - ramp:
-                    tag: capacity
-                    items:
-                      - string: {text: , foreground: ff0000ff, font: *awesome}
-                      - string: {text: , foreground: ffa600ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                      - string: {text: , foreground: 00ff00ff, font: *awesome}
-                - string: {text: "{capacity}%"}
+                - string: {text: "{capacity}%", foreground: 00ff00ff}
+    - clock:
+        date-format: "%a %Y-%m-%d"
+        time-format: "%H:%M"
+        # time-format: "%H:%M:%S"
+        content:
+          - string: {text: , font: *awesome}
+          - string: {text: "{date} {time}"}
+
     - script:
-        path: ~/scripts/check_idle.sh
+        path: ~/scripts/caffeine.sh
+        args: ["yambar"]
         content:
           map:
-            on-click: ~/scripts/toggle_idle.sh
+            on-click: ~/scripts/caffeine.sh toggle
             conditions:
-              test == "":
-                - string: {text: , font: *awesome, foreground: 00ff00ff}
-                - string: {text: "ON", foreground: 00ff00ff}
-              test != "":
+              status == "on":
+                - string: {text: , font: *awesome, foreground: 00ff00ff}
+                # - string: {text: "ON ", foreground: 00ff00ff}
+              status == "off":
                 - string: {text: , font: *awesome}
-                - string: {text: "OFF"}
+                # - string: {text: "OFF"}
+
+    # - script:
+    #     poll-interval: 10000
+    #     path: ~/scripts/yambar-tray-width.sh
+    #     content:
+    #       - string: {text: "|{padding}"}
 
 
