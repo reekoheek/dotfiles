@@ -1,0 +1,286 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 35,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(left, 8)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 36,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(down, 6)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 37,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(up, 6)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 38,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(right, 8)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 49,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "key(BTN_LEFT)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 50,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "key(BTN_RIGHT)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 22,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "key_down(BTN_LEFT)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 23,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "key_up(BTN_LEFT)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 56,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 35,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(left, 5000)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 56,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 36,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(down, 5000)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 56,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 37,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(up,5000)",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 29,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 125,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 56,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            },
+            {
+                "type": 1,
+                "code": 38,
+                "origin_hash": "eb62fc478235047cf82efd8d2d989233"
+            }
+        ],
+        "target_uinput": "mouse",
+        "output_symbol": "mouse(right,5000)",
+        "mapping_type": "key_macro"
+    }
+]

@@ -29,7 +29,7 @@ bar:
         poll-interval: 10000
         content:
           map:
-            on-click: gnome-system-monitor
+            on-click: wezterm start -- btop
             conditions:
               id < 0:
                 map:
@@ -48,7 +48,7 @@ bar:
         poll-interval: 10000
         content:
           map:
-            on-click: gnome-system-monitor
+            on-click: wezterm start -- btop
             default:
               - string: {text: , font: *awesome}
               - string: {text: "{used:mb}MB"}
