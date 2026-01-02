@@ -62,7 +62,7 @@ shape = "Block"
 TERM = "xterm-256color"
 
 [font]
-size = 13.0
+size = 11.0
 # use_thin_strokes = true
 
 [font.bold]

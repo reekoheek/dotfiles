@@ -1,11 +1,11 @@
 [global]
-		mouse_left_click=do_action,close
+    mouse_left_click=do_action,close
 
     frame_width = 1
     frame_color = "#788388"
 
-    # font = Noto Sans 10
-    font = JetBrains Mono 12
+    font = Ubuntu 10
+    # font = JetBrains Mono 12
 
     # Allow a small subset of html markup:
     #   <b>bold</b>
@@ -41,9 +41,9 @@
     # width is 0.
     # shrink = yes
 
-		width = 500
-		offset = (0, 0)
-		vertical_alignment = top
+    width = 500
+    offset = (0, 0)
+    vertical_alignment = top
 
     # The transparency of the window.  Range: [0; 100].
     # This option will only work if a compositing windowmanager is
@@ -125,7 +125,7 @@
     icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/
 
     # Limit icons size.
-    max_icon_size=128
+    max_icon_size=90
 
 [shortcuts]
 

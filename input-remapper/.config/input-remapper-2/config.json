@@ -1,7 +1,7 @@
 {
     "version": "2.0.1",
     "autoload": {
-        "AT Translated Set 2 keyboard": "mouse",
-        "SEMICO   USB Gaming Keyboard ": "mouse"
+        "SEMICO   USB Gaming Keyboard ": "mouse",
+        "AT Translated Set 2 keyboard": "mouse"
     }
 }

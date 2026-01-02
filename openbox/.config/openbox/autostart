@@ -1,23 +1,24 @@
 # xrandr --output eDP-1 --mode 2560x1600 > /dev/null 2>&1 &
 # xrandr --output eDP-1 --mode 1920x1200 > /dev/null 2>&1 &
 
-/home/reekoheek/scripts/configure-keyboard.sh &
-/home/reekoheek/scripts/monitor-res.sh &
-# picom > /dev/null 2>&1 &
+$HOME/scripts/monitor-res.sh &
+dunst > /dev/null 2>&1 &
+#picom > /dev/null 2>&1 &
 
 libinput-gestures > /dev/null 2>&1 &
 # xinput set-prop 12 "libinput Accel Speed" 0.5
-unclutter-xfixes --timeout 3 > /dev/null 2>&1 &
+# unclutter-xfixes --timeout 3 > /dev/null 2>&1 &
 
 /home/reekoheek/scripts/caffeine.sh off
 
-dunst > /dev/null 2>&1 &
-
-wezterm-gui > /dev/null 2>&1 &
+kdeconnect-cli > /dev/null 2>&1 &
+# wezterm-gui > /dev/null 2>&1 &
+ghostty > /dev/null 2>&1 &
 # slack > /dev/null 2>&1 &
 # discord > /dev/null 2>&1 &
-telegram-desktop > /dev/null 2>&1 &
-teams-for-linux > /dev/null 2>&1 &
-/home/reekoheek/opt/zen/zen -P default > /dev/null 2>&1 &
+# telegram-desktop > /dev/null 2>&1 &
+# teams-for-linux > /dev/null 2>&1 &
+$HOME/opt/zen/zen -P default > /dev/null 2>&1 &
 
-sleep 5 && /home/reekoheek/scripts/monitor-bat.sh > /dev/null 2>&1 &
+sleep 3 && $HOME/scripts/configure-keyboard.sh &
+sleep 5 && $HOME/scripts/monitor-bat.sh > /dev/null 2>&1 &

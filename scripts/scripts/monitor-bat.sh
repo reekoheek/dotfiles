@@ -3,7 +3,7 @@
 SCRIPT_DIR=$(dirname "$0")
 CAFFEINE="$SCRIPT_DIR/caffeine.sh"
 
-notify-send "Monitor battery" "Started"
+# notify-send "Monitor battery" "Started"
 
 while [ true ]; do
 	BAT_LEVEL=$(cat /sys/class/power_supply/BAT0/capacity)

@@ -21,10 +21,14 @@ bar:
   #   margin: 0
 
   left:
-    - xwindow:
+    - foreign-toplevel:
         content:
-          - string: {text: " 󰘔 {application}", foreground: ffff00ff, font: *small}
-          - string: {text: " {title}", font: *small}
+          map:
+            conditions:
+              ~activated: {empty: {}}
+              activated:
+                - string: {text: "{app-id}: {title}"}
+
 
   # center:
 

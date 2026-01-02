@@ -1,7 +1,13 @@
-export BROWSER=xdg-open
-export DESKTOP_THEME=dark
-export GTK_THEME=Yaru-red-dark
-export GTK_ICON_THEME=Yaru-red-dark
+export GTK_THEME=Adwaita:dark
+export GTK_ICON_THEME=Adwaita
+export DESKTOP_SESSION=openbox
+export XDG_CURRENT_DESKTOP=Openbox
+export XCURSOR_THEME=Adwaita
 export XCURSOR_SIZE=64
+export BROWSER=xdg-open
 
-
+# export BROWSER=xdg-open
+# export DESKTOP_THEME=dark
+# export GTK_THEME=Yaru-red-dark
+# export GTK_ICON_THEME=Yaru-red-dark
+# export XCURSOR_SIZE=64

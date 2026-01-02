@@ -2,5 +2,8 @@
 @theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
 
 configuration {
+	modi: "combi";
+	combi-modi: "drun,window";
+	show: "combi";
 	show-icons: true;
 }
