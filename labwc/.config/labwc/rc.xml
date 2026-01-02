@@ -2,7 +2,7 @@
 <labwc_config>
 	<theme>
 		<name>reekoheek</name>
-		<titleLayout>NLIMC</titleLayout>
+		<titleLayout></titleLayout>
 		<!-- <cornerRadius>8</cornerRadius> -->
 		<keepBorder>yes</keepBorder>
 		<dropShadows>yes</dropShadows>
@@ -273,4 +273,8 @@
 			<naturalScroll>yes</naturalScroll>
 		</device>
 	</libinput>
+
+	<windowRules>
+		<windowRule identifier="*" serverDecoration="no"></windowRule>
+	</windowRules>
 </labwc_config>
