@@ -273,11 +273,4 @@
 			<naturalScroll>yes</naturalScroll>
 		</device>
 	</libinput>
-
-	<windowRules>
-		<windowRule identifier="*">
-			<serverDecoration>yes</serverDecoration>
-		</windowRule>
-	</windowRules>
-
 </labwc_config>
