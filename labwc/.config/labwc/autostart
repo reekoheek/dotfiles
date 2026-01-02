@@ -12,12 +12,7 @@ $HOME/scripts/watch-clipboard.sh > /dev/null 2>&1 &
 
 libinput-gestures > /dev/null 2>&1 &
 
-swayidle -w \
-	timeout 180 'swaylock -f' \
-	timeout 180 'brightnessctl set 0%' \
-	timeout 300 '~/.config/swaylock/scripts/suspend.sh' \
-	resume 'brightnessctl set 5%' \
-	before-sleep 'swaylock -f' >/dev/null 2>&1 &
+/home/reekoheek/scripts/caffeine.sh off
 
 kdeconnect-cli > /dev/null 2>&1 &
 foot > /dev/null 2>&1 &
