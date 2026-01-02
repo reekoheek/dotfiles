@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Configure Keyboard
+Comment=Configure Keyboard
+Exec=/home/reekoheek/scripts/configure-keyboard.sh
+Icon=input-keyboard
+Terminal=false
+Type=Application
+#Categories=Wine;
+#StartupNotify=true

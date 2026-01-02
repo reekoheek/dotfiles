@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Postman
+GenericName=API Client
+Comment=Postman API Development Environment
+Exec=/opt/Postman/Postman
+Icon=/opt/Postman/app/resources/app/assets/icon.png
+Terminal=false
+Type=Application
+Categories=Development;Utility;
+StartupWMClass=Postman

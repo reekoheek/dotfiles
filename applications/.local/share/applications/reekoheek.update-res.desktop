@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Update Resolution
+Comment=Update Resolution
+Exec=/home/reekoheek/scripts/update-res.sh
+Icon=monitor
+Terminal=false
+Type=Application
+#Categories=Wine;
+#StartupNotify=true

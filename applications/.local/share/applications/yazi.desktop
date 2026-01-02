@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Yazi
+Comment=CLI File Manager
+Exec=/home/reekoheek/.cargo/bin/yazi
+Icon=folder
+Terminal=true
+Type=Application
+MimeType=inode/directory;
+Categories=Utility;FileTools;
+

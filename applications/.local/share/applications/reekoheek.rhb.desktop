@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=RHB TradeSmart ID
+Comment=RHB TradeSmart ID Wine App
+#Exec=sh -c "cd /home/reekoheek/.wine/drive_c/Program\ Files/RHBTradeSmartID; wine RHB\ TradeSmartID.exe"
+Exec=wine '/home/reekoheek/.wine/drive_c/Program Files/RHBTradeSmartID/RHB TradeSmartID.exe'
+Icon=wine
+Terminal=false
+Type=Application
+Categories=Wine;
+StartupNotify=true

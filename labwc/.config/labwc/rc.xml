@@ -4,7 +4,7 @@
 		<name>reekoheek</name>
 		<titleLayout>NLIMC</titleLayout>
 		<!-- <cornerRadius>8</cornerRadius> -->
-		<keepBorder>no</keepBorder>
+		<keepBorder>yes</keepBorder>
 		<dropShadows>yes</dropShadows>
 	</theme>
 
@@ -12,18 +12,18 @@
 		<number>2</number>
 		<firstdesk>1</firstdesk>
 		<names>
-			<name> Desktop 1 </name>
-			<name> Desktop 2 </name>
-			<name> Desktop 3 </name>
-			<name> Desktop 4 </name>
-			<name> Desktop 5 </name>
-			<name> Desktop 6 </name>
-			<name> Desktop 7 </name>
-			<name> Desktop 8 </name>
-			<name> Desktop 9 </name>
+			<name>Desktop 1</name>
+			<name>Desktop 2</name>
 		</names>
 		<popupTime>875</popupTime>
 	</desktops>
+
+	<windowSwitcher show="yes" preview="yes" outlines="yes">
+		<fields>
+			<field content="app_id" width="20%" />
+			<field content="title" width="80%" />
+		</fields>
+	</windowSwitcher>
 
 	<keyboard>
 		<default />
@@ -276,7 +276,7 @@
 
 	<windowRules>
 		<windowRule identifier="*">
-			<serverDecoration>no</serverDecoration>
+			<serverDecoration>yes</serverDecoration>
 		</windowRule>
 	</windowRules>
 

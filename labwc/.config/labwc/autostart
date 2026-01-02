@@ -2,7 +2,13 @@
 # wlr-randr --output eDP-1 --custom-mode 1920x1200@120 > /dev/null 2>&1 &
 
 $HOME/scripts/monitor-res.sh &
-dunst > /dev/null 2>&1 &
+mako > /dev/null 2>&1 &
+
+$HOME/scripts/watch-clipboard.sh > /dev/null 2>&1 &
+
+# screen sharing
+/usr/libexec/xdg-desktop-portal-wlr &
+/usr/libexec/xdg-desktop-portal &
 
 libinput-gestures > /dev/null 2>&1 &
 

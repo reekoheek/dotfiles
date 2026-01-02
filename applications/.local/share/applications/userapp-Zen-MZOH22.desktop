@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Icon=/home/reekoheek/opt/zen/browser/chrome/icons/default/default128.png
+# NoDisplay=true
+Exec=/home/reekoheek/opt/zen/zen -P default %u
+Name=Zen Browser
+Comment=Zen Browser
+Categories=Network;WebBrowser;
+MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
+

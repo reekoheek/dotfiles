@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Logout
+Comment=Logout
+Exec=sh -c "loginctl terminate-user $USER"
+Icon=system-log-out
+Terminal=false
+Type=Application
+#Categories=Wine;
+#StartupNotify=true
