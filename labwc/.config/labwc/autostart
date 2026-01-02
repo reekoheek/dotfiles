@@ -29,4 +29,3 @@ $HOME/opt/zen/zen -P default > /dev/null 2>&1 &
 
 sleep 3 && $HOME/scripts/configure-keyboard.sh &
 sleep 5 && $HOME/scripts/monitor-bat.sh > /dev/null 2>&1 &
-
