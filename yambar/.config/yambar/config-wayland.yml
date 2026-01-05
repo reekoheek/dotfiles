@@ -1,12 +1,12 @@
-small: &small JetBrainsMono Nerd Font:pixelsize=15
+small: &small JetBrainsMono Nerd Font:pixelsize=16
 
 # This is THE bar configuration
 bar:
   location: top
-  height: 28
+  height: 18
   spacing: 0
   margin: 0
-  font: JetBrainsMono Nerd Font:pixelsize=18
+  font: JetBrainsMono Nerd Font:pixelsize=16
   foreground: ffffffff
   # background: 00000000
   # background: 000000ff
@@ -27,7 +27,7 @@ bar:
             conditions:
               ~activated: {empty: {}}
               activated:
-                - string: {text: "{app-id}: {title}"}
+                - string: {text: " 󰘔 {app-id}: {title}"}
 
 
   # center:
@@ -37,7 +37,7 @@ bar:
         poll-interval: 5000
         content:
           - map:
-              on-click: alacritty -e btop
+              on-click: foot htop
               conditions:
                 id < 0:
                   map:
@@ -53,7 +53,7 @@ bar:
         poll-interval: 5000
         content:
           - map:
-              on-click: alacritty -e btop
+              on-click: foot htop
               default:
                 - string: {text: "  {used:gb:02}GB "}
               conditions:
@@ -84,7 +84,7 @@ bar:
               conditions:
                 name == wlo1:
                   map:
-                    on-click: alacritty -e nmtui
+                    on-click: foot nmtui
                     default: {string: {text: " 󰤨 down ", foreground: ffffff66}}
                     conditions:
                       state == down: {string: {text: " 󰤮 down ", foreground: ff0000ff}}
@@ -163,11 +163,3 @@ bar:
                   - string: {text: " 󰅶 ", foreground: 00ff00ff}
                 status == "off":
                   - string: {text: " 󰅶 "}
-
-    # - script:
-    #     poll-interval: 10000
-    #     path: ~/scripts/yambar-tray-width.sh
-    #     content:
-    #       - string: {text: "|{padding}"}
-
-

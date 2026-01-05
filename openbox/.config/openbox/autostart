@@ -1,6 +1,8 @@
 # xrandr --output eDP-1 --mode 2560x1600 > /dev/null 2>&1 &
 # xrandr --output eDP-1 --mode 1920x1200 > /dev/null 2>&1 &
 
+ln -sf $HOME/.config/yambar/config-x11.yml $HOME/.config/yambar/config.yml
+
 $HOME/scripts/monitor-res.sh &
 dunst > /dev/null 2>&1 &
 #picom > /dev/null 2>&1 &

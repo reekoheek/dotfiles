@@ -115,7 +115,11 @@
 		</keybind>
 
 		<keybind key="W-Tab">
-			<action name="NextWindow" allWorkspaces="yes" />
+			<action name="NextWindow" workspace="all" />
+		</keybind>
+
+		<keybind key="W-S-Tab">
+			<action name="PreviousWindow" workspace="all" />
 		</keybind>
 
 		<keybind key="W-d">

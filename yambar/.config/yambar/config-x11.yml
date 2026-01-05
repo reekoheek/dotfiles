@@ -159,11 +159,3 @@ bar:
                   - string: {text: " 󰅶 ", foreground: 00ff00ff}
                 status == "off":
                   - string: {text: " 󰅶 "}
-
-    # - script:
-    #     poll-interval: 10000
-    #     path: ~/scripts/yambar-tray-width.sh
-    #     content:
-    #       - string: {text: "|{padding}"}
-
-

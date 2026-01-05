@@ -1,6 +1,8 @@
 # wlr-randr --output eDP-1 --custom-mode 2560x1600@120 > /dev/null 2>&1 &
 # wlr-randr --output eDP-1 --custom-mode 1920x1200@120 > /dev/null 2>&1 &
 
+ln -sf $HOME/.config/yambar/config-wayland.yml $HOME/.config/yambar/config.yml
+
 $HOME/scripts/monitor-res.sh &
 mako > /dev/null 2>&1 &
 
