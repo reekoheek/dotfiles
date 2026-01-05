@@ -6,7 +6,7 @@ ln -sf $HOME/.config/yambar/config-wayland.yml $HOME/.config/yambar/config.yml
 $HOME/scripts/monitor-res.sh &
 mako > /dev/null 2>&1 &
 
-$HOME/scripts/watch-clipboard.sh > /dev/null 2>&1 &
+$HOME/scripts/monitor-clipboard.sh > /dev/null 2>&1 &
 
 # screen sharing
 /usr/libexec/xdg-desktop-portal-wlr &
@@ -14,7 +14,7 @@ $HOME/scripts/watch-clipboard.sh > /dev/null 2>&1 &
 
 libinput-gestures > /dev/null 2>&1 &
 
-/home/reekoheek/scripts/caffeine.sh off
+$HOME/scripts/caffeine.sh off
 
 kdeconnect-cli > /dev/null 2>&1 &
 foot > /dev/null 2>&1 &
