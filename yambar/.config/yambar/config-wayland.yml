@@ -3,7 +3,7 @@ small: &small JetBrainsMono Nerd Font:pixelsize=16
 # This is THE bar configuration
 bar:
   location: top
-  height: 18
+  height: 20
   spacing: 0
   margin: 0
   font: JetBrainsMono Nerd Font:pixelsize=16
@@ -49,18 +49,31 @@ bar:
                       cpu >= 50:
                         - string: {text: " 󰍛 {cpu:03}% ", foreground: ffff00ff}
 
-    - mem:
+    - script:
+        path: ~/scripts/mem-usage.sh
         poll-interval: 5000
         content:
           - map:
               on-click: foot htop
               default:
-                - string: {text: "  {used:gb:02}GB "}
+                - string: {text: "   {used:02}GB "}
               conditions:
-                percent_used >= 90:
-                  - string: {text: "  {used:gb:02}GB ", foreground: ff0000ff}
-                percent_used >= 75:
-                  - string: {text: "  {used:gb:02}GB ", foreground: ffff00ff}
+                used >= 32:
+                  - string: {text: "   {used:02}GB ", foreground: ff0000ff}
+                used >= 24:
+                  - string: {text: "   {used:02}GB ", foreground: ffff00ff}
+    - script:
+        path: ~/scripts/disk-usage.sh
+        poll-interval: 60000
+        content:
+          - map:
+              default:
+                - string: {text: " 󰋊 {percent:03}% "}
+              conditions:
+                percent >= 90:
+                  - string: {text: " 󰋊 {percent:03}% ", foreground: ff0000ff}
+                percent >= 75:
+                  - string: {text: " 󰋊 {percent:03}% ", foreground: ffff00ff}
 
     - network:
         name: en1

@@ -30,9 +30,7 @@ toggle() {
 start_swayidle() {
 	swayidle -w \
 		timeout 180 'swaylock -f' \
-		timeout 180 'brightnessctl set 0%' \
 		timeout 300 '~/.config/swaylock/scripts/suspend.sh' \
-		resume 'brightnessctl set 5%' \
 		before-sleep 'swaylock -f' >/dev/null 2>&1 &
 }
 
