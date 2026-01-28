@@ -1,22 +1,22 @@
+wlr-randr --output eDP-1 --mode 2880x1800@60.000999
 # wlr-randr --output eDP-1 --custom-mode 2560x1600@120 > /dev/null 2>&1 &
 # wlr-randr --output eDP-1 --custom-mode 1920x1200@120 > /dev/null 2>&1 &
 
 ln -sf $HOME/.config/yambar/config-wayland.yml $HOME/.config/yambar/config.yml
 
-$HOME/scripts/monitor-res.sh &
+$HOME/scripts/monitor-res.sh > /dev/null 2>&1 &
 mako > /dev/null 2>&1 &
 
 $HOME/scripts/monitor-clipboard.sh > /dev/null 2>&1 &
 
 # screen sharing
-/usr/libexec/xdg-desktop-portal-wlr &
-/usr/libexec/xdg-desktop-portal &
+/usr/libexec/xdg-desktop-portal-wlr > /dev/null 2>&1 &
+/usr/libexec/xdg-desktop-portal > /dev/null 2>&1 &
 
 libinput-gestures > /dev/null 2>&1 &
 
-$HOME/scripts/caffeine.sh off
+$HOME/bin/caffeine off
 
-kdeconnect-cli > /dev/null 2>&1 &
 foot > /dev/null 2>&1 &
 # slack > /dev/null 2>&1 &
 # discord > /dev/null 2>&1 &
@@ -24,7 +24,6 @@ foot > /dev/null 2>&1 &
 # teams-for-linux > /dev/null 2>&1 &
 $HOME/opt/zen/zen -P default > /dev/null 2>&1 &
 
-sleep 3 && $HOME/scripts/configure-keyboard.sh &
-sleep 5 && $HOME/scripts/monitor-bat.sh > /dev/null 2>&1 &
+sleep 3 && $HOME/scripts/configure-keyboard.sh > /dev/null 2>&1 &
 sleep 5 && $HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
-
+kdeconnect-cli > /dev/null 2>&1 &

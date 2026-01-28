@@ -163,11 +163,11 @@ bar:
                 - string: {text: "|"}
 
     - script:
-        path: ~/scripts/caffeine.sh
-        args: ["yambar"]
+        path: ~/bin/caffeine
+        args: ["listen"]
         content:
           - map:
-              on-click: ~/scripts/caffeine.sh toggle
+              on-click: ~/bin/caffeine toggle
               conditions:
                 status == "on":
                   - string: {text: " 󰅶 ", foreground: 00ff00ff}

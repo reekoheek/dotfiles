@@ -4,8 +4,8 @@
 		<name>reekoheek</name>
 		<titleLayout></titleLayout>
 		<!-- <cornerRadius>8</cornerRadius> -->
-		<keepBorder>yes</keepBorder>
-		<dropShadows>yes</dropShadows>
+		<keepBorder>no</keepBorder>
+		<dropShadows>no</dropShadows>
 	</theme>
 
 	<desktops>

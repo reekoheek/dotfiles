@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Toggle Caffeine
 Comment=Toggle caffeine to inhibit sleep
-Exec=/home/reekoheek/scripts/caffeine.sh toggle
+Exec=/home/reekoheek/bin/caffeine toggle
 Icon=/home/reekoheek/.local/share/icons/coffee.svg
 Terminal=false
 Type=Application

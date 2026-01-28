@@ -11,9 +11,8 @@ libinput-gestures > /dev/null 2>&1 &
 # xinput set-prop 12 "libinput Accel Speed" 0.5
 # unclutter-xfixes --timeout 3 > /dev/null 2>&1 &
 
-/home/reekoheek/scripts/caffeine.sh off
+$HOME/bin/caffeine off
 
-kdeconnect-cli > /dev/null 2>&1 &
 # wezterm-gui > /dev/null 2>&1 &
 ghostty > /dev/null 2>&1 &
 # slack > /dev/null 2>&1 &
@@ -23,4 +22,5 @@ ghostty > /dev/null 2>&1 &
 $HOME/opt/zen/zen -P default > /dev/null 2>&1 &
 
 sleep 3 && $HOME/scripts/configure-keyboard.sh &
-sleep 5 && $HOME/scripts/monitor-bat.sh > /dev/null 2>&1 &
+sleep 5 && $HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
+kdeconnect-cli > /dev/null 2>&1 &
