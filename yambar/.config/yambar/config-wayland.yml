@@ -31,49 +31,29 @@ bar:
 
 
   # center:
-
   right:
-    - cpu:
-        poll-interval: 5000
+    - pulse:
         content:
           - map:
-              on-click: foot htop
+              on-click: pavucontrol
+              default:
+                - string: {text: " 󰕾 {sink_percent:03}% "}
               conditions:
-                id < 0:
-                  map:
-                    default:
-                      - string: {text: " 󰍛 {cpu:03}% "}
-                    conditions:
-                      cpu >= 75:
-                        - string: {text: " 󰍛 {cpu:03}% ", foreground: ff0000ff}
-                      cpu >= 50:
-                        - string: {text: " 󰍛 {cpu:03}% ", foreground: ffff00ff}
+                sink_muted:
+                  - string: {text: " 󰝟 {sink_percent:03}% ", foreground: ff0000ff}
+                sink_percent == 0:
+                  - string: {text: " 󰖁 {sink_percent:03}% "}
+                sink_percent < 70:
+                  - string: {text: " 󰖀 {sink_percent:03}% "}
+                sink_percent > 100:
+                  - string: {text: " 󰕾 {sink_percent:03}% ", foreground: ffff00ff}
+          - string: {text: " | "}
 
-    - script:
-        path: ~/scripts/mem-usage.sh
-        poll-interval: 5000
+    - backlight:
+        name: intel_backlight
         content:
-          - map:
-              on-click: foot htop
-              default:
-                - string: {text: "   {used:02}GB "}
-              conditions:
-                used >= 32:
-                  - string: {text: "   {used:02}GB ", foreground: ff0000ff}
-                used >= 24:
-                  - string: {text: "   {used:02}GB ", foreground: ffff00ff}
-    - script:
-        path: ~/scripts/disk-usage.sh
-        poll-interval: 60000
-        content:
-          - map:
-              default:
-                - string: {text: " 󰋊 {percent:03}% "}
-              conditions:
-                percent >= 90:
-                  - string: {text: " 󰋊 {percent:03}% ", foreground: ff0000ff}
-                percent >= 75:
-                  - string: {text: " 󰋊 {percent:03}% ", foreground: ffff00ff}
+          - string: {text: " 󰃠 {percent:03}% "}
+          - string: {text: " | "}
 
     - network:
         name: en1
@@ -87,11 +67,11 @@ bar:
                       default: {string: {text: " 󰈀 - ", foreground: ffffff66}}
                       conditions:
                         state == up && ipv4 != "": {string: {text: " 󰈀 {ipv4} "}}
+                  - string: {text: " | "}
 
     - network:
         name: wlo1
         content:
-          - string: {text: "|"}
           - map:
               default: {empty: {}}
               conditions:
@@ -108,50 +88,69 @@ bar:
                           conditions:
                             ipv4 == "":
                               - string: {text: " 󰤨 {ssid} - ", foreground: ffffff66}
+          - string: {text: " | "}
 
-    - pulse:
+    - script:
+        path: ~/bin/systower
+        args: ["watch"]
         content:
-          - string: {text: "|"}
+          # CPU
           - map:
-              on-click: pavucontrol
+              on-click: foot htop
               default:
-                - string: {text: " 󰕾 {sink_percent:03}% "}
+                - string: {text: " 󰍛 {cpu_percent:05.1f}% "}
               conditions:
-                sink_muted:
-                  - string: {text: " 󰝟 {sink_percent:03}% ", foreground: ff0000ff}
-                sink_percent == 0:
-                  - string: {text: " 󰖁 {sink_percent:03}% "}
-                sink_percent < 70:
-                  - string: {text: " 󰖀 {sink_percent:03}% "}
-                sink_percent > 100:
-                  - string: {text: " 󰕾 {sink_percent:03}% ", foreground: ffff00ff}
-
-    - backlight:
-        name: intel_backlight
-        content:
-          - string: {text: "|"}
-          - string: {text: " 󰃠 {percent:03}% "}
-
-    - battery:
-        name: BAT0
-        poll-interval: 60000
-        content:
-          - string: {text: "|"}
+                cpu_percent >= 75:
+                  - string: {text: " 󰍛 {cpu_percent:05.1f}% ", foreground: ff0000ff}
+                cpu_percent >= 50:
+                  - string: {text: " 󰍛 {cpu_percent:05.1f}% ", foreground: ffff00ff}
+          - string: {text: " | "}
+          # Memory
+          - map:
+              on-click: foot htop
+              default:
+                - string: {text: " 󰘚 {mem_used:05.1f}GB "}
+              conditions:
+                mem_percent >= 90:
+                  - string: {text: " 󰘚 {mem_used:05.1f}GB ", foreground: ff0000ff}
+                mem_percent >= 60:
+                  - string: {text: " 󰘚 {mem_used:05.1f}GB ", foreground: ffff00ff}
+          - string: {text: " | "}
+          # Disk
+          - map:
+              default:
+                - string: {text: " 󰋊 {storage_percent:05.1f}% "}
+              conditions:
+                storage_percent >= 90:
+                  - string: {text: " 󰋊 {storage_percent:05.1f}% ", foreground: ff0000ff}
+                storage_percent >= 75:
+                  - string: {text: " 󰋊 {storage_percent:05.1f}% ", foreground: ffff00ff}
+          - string: {text: " | "}
+          # Battery
           - map:
               on-click: gnome-power-statistics
               default:
-                - string: {text: " 󰁹 {capacity:03}% {estimate} "}
+                - string: {text: " 󰁹 {bat_percent:03}% {bat_estimate} "}
               conditions:
-                state == charging && capacity >= 95:
-                  - string: {text: " 󰂄 {capacity:03}% {estimate} ", foreground: 00ff00ff}
-                state == charging:
-                  - string: {text: " 󰂄 {capacity:03}% {estimate} "}
-                capacity <= 15:
-                  - string: {text: " 󰂎 {capacity:03}% {estimate} ", foreground: ff0000ff}
-                capacity <= 50:
-                  - string: {text: " 󰁾 {capacity:03}% {estimate} ", foreground: ffff00ff}
-                state == full:
-                  - string: {text: " 󰁹 {capacity:03}% ", foreground: 00ff00ff}
+                bat_status == "charging" && bat_percent >= 95:
+                  - string: {text: " 󰂄 {bat_percent:03}% {bat_estimate}", foreground: 00ff00ff}
+                bat_status == "charging":
+                  - string: {text: " 󰂄 {bat_percent:03}% {bat_estimate}"}
+                bat_percent <= 15:
+                  - string: {text: " 󰂎 {bat_percent:03}% {bat_estimate}", foreground: ff0000ff}
+                bat_percent <= 50:
+                  - string: {text: " 󰁾 {bat_percent:03}% {bat_estimate}", foreground: ffff00ff}
+                bat_status == "full":
+                  - string: {text: " 󰁹 {bat_percent:03}%", foreground: 00ff00ff}
+          # Caffeine
+          - map:
+              on-click: ~/bin/systower caffeine toggle
+              conditions:
+                caffeine == "on":
+                  - string: {text: "󰅶 ", foreground: 00ff00ff}
+                caffeine == "off":
+                  - string: {text: "󰅶 "}
+          - string: {text: " | "}
 
     - clock:
         date-format: "%a, %Y-%m-%d"
@@ -161,18 +160,4 @@ bar:
           - list:
               on-click: orage --toggle
               items:
-                - string: {text: "|"}
                 - string: {text: " 󰔠 {date} {time} "}
-                - string: {text: "|"}
-
-    - script:
-        path: ~/bin/systower
-        args: ["watch"]
-        content:
-          - map:
-              on-click: ~/bin/systower caffeine toggle
-              conditions:
-                status == "on":
-                  - string: {text: " 󰅶 ", foreground: 00ff00ff}
-                status == "off":
-                  - string: {text: " 󰅶 "}

@@ -22,6 +22,6 @@ $HOME/scripts/configure-keyboard.sh > /dev/null 2>&1 &
 kdeconnect-cli > /dev/null 2>&1 &
 $HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
 
-alacritty > /dev/null 2>&1 &
+foot > /dev/null 2>&1 &
 $HOME/opt/zen/zen -P default > /dev/null 2>&1 &
 
