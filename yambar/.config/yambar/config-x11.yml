@@ -163,11 +163,11 @@ bar:
                 - string: {text: "|"}
 
     - script:
-        path: ~/bin/caffeine
-        args: ["listen"]
+        path: ~/bin/systower
+        args: ["watch"]
         content:
           - map:
-              on-click: ~/bin/caffeine toggle
+              on-click: ~/bin/systower caffeine toggle
               conditions:
                 status == "on":
                   - string: {text: " 󰅶 ", foreground: 00ff00ff}

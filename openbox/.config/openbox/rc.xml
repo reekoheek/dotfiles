@@ -358,7 +358,7 @@
 		</keybind>
 		<keybind key="W-Return">
 			<action name="Execute">
-				<command>ghostty</command>
+				<command>alacritty</command>
 			</action>
 		</keybind>
 		<keybind key="W-w">

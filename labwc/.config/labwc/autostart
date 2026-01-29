@@ -7,23 +7,21 @@ ln -sf $HOME/.config/yambar/config-wayland.yml $HOME/.config/yambar/config.yml
 $HOME/scripts/monitor-res.sh > /dev/null 2>&1 &
 mako > /dev/null 2>&1 &
 
-$HOME/scripts/monitor-clipboard.sh > /dev/null 2>&1 &
-
-# screen sharing
+# clipboard and screen sharing
+wl-paste --watch cliphist store > /dev/null 2>&1 &
 /usr/libexec/xdg-desktop-portal-wlr > /dev/null 2>&1 &
 /usr/libexec/xdg-desktop-portal > /dev/null 2>&1 &
 
 libinput-gestures > /dev/null 2>&1 &
 
-$HOME/bin/caffeine off
+$HOME/bin/systower caffeine off
 
-foot > /dev/null 2>&1 &
-# slack > /dev/null 2>&1 &
-# discord > /dev/null 2>&1 &
-# telegram-desktop > /dev/null 2>&1 &
-# teams-for-linux > /dev/null 2>&1 &
+sleep 3
+
+$HOME/scripts/configure-keyboard.sh > /dev/null 2>&1 &
+kdeconnect-cli > /dev/null 2>&1 &
+$HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
+
+alacritty > /dev/null 2>&1 &
 $HOME/opt/zen/zen -P default > /dev/null 2>&1 &
 
-sleep 3 && $HOME/scripts/configure-keyboard.sh > /dev/null 2>&1 &
-sleep 5 && $HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
-kdeconnect-cli > /dev/null 2>&1 &
