@@ -3,7 +3,7 @@ small: &small JetBrainsMono Nerd Font:pixelsize=16
 # This is THE bar configuration
 bar:
   location: top
-  height: 20
+  height: 22
   spacing: 0
   margin: 0
   font: JetBrainsMono Nerd Font:pixelsize=16
@@ -27,24 +27,26 @@ bar:
             conditions:
               ~activated: {empty: {}}
               activated:
-                - string: {text: " 󰘔 {app-id}: {title}"}
-
+                - string: {text: " 󰘔 {app-id}"}
+                - string: {text: "  "}
+                - string: {text: "{title}"}
+                - string: {text: "  "}
 
   # center:
   right:
     - network:
         name: en1
         content:
+          - string: {text: "  "}
           - map:
               default: {empty: {}}
               conditions:
                 name == en1 && carrier:
-                  - string: {text: "|"}
                   - map:
                       default: {string: {text: " 󰈀 - ", foreground: ffffff66}}
                       conditions:
                         state == up && ipv4 != "": {string: {text: " 󰈀 {ipv4} "}}
-                  - string: {text: " | "}
+                  - string: {text: "  "}
 
     - network:
         name: wlo1
@@ -65,7 +67,7 @@ bar:
                           conditions:
                             ipv4 == "":
                               - string: {text: " 󰤨 {ssid} - ", foreground: ffffff66}
-          - string: {text: " | "}
+          - string: {text: "  "}
 
     - script:
         path: ~/bin/systower
@@ -85,10 +87,10 @@ bar:
                   - string: {text: " 󰖀 {vol_percent}% "}
                 vol_percent > 100:
                   - string: {text: " 󰕾 {vol_percent}% ", foreground: ffff00ff}
-          - string: {text: " | "}
+          - string: {text: "  "}
           # Backlight
           - string: {text: " 󰃠 {backlight_percent}% "}
-          - string: {text: " | "}
+          - string: {text: "  "}
           # CPU
           - map:
               on-click: foot htop
@@ -99,7 +101,7 @@ bar:
                   - string: {text: " 󰍛 {cpu_percent:.1}% ", foreground: ff0000ff}
                 cpu_percent >= 50:
                   - string: {text: " 󰍛 {cpu_percent:.1}% ", foreground: ffff00ff}
-          - string: {text: " | "}
+          - string: {text: "  "}
           # Memory
           - map:
               on-click: foot htop
@@ -110,7 +112,7 @@ bar:
                   - string: {text: " 󰘚 {mem_used:.1}GB ", foreground: ff0000ff}
                 mem_percent >= 60:
                   - string: {text: " 󰘚 {mem_used:.1}GB ", foreground: ffff00ff}
-          - string: {text: " | "}
+          - string: {text: "  "}
           # Disk
           - map:
               default:
@@ -120,7 +122,7 @@ bar:
                   - string: {text: " 󰋊 {storage_percent:.1}% ", foreground: ff0000ff}
                 storage_percent >= 75:
                   - string: {text: " 󰋊 {storage_percent:.1}% ", foreground: ffff00ff}
-          - string: {text: " | "}
+          - string: {text: "  "}
           # Battery
           - map:
               on-click: gnome-power-statistics
@@ -150,7 +152,7 @@ bar:
                   - string: {text: " 󰅶 ", foreground: 00ff00ff}
                 caffeine == "off":
                   - string: {text: " 󰅶 "}
-          - string: {text: " | "}
+          - string: {text: "  "}
           # Clock
           - map:
               on-click: orage --toggle
