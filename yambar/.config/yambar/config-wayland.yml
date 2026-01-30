@@ -32,29 +32,6 @@ bar:
 
   # center:
   right:
-    - pulse:
-        content:
-          - map:
-              on-click: pavucontrol
-              default:
-                - string: {text: " 󰕾 {sink_percent}% "}
-              conditions:
-                sink_muted:
-                  - string: {text: " 󰝟 {sink_percent}% ", foreground: ff0000ff}
-                sink_percent == 0:
-                  - string: {text: " 󰖁 {sink_percent}% "}
-                sink_percent < 70:
-                  - string: {text: " 󰖀 {sink_percent}% "}
-                sink_percent > 100:
-                  - string: {text: " 󰕾 {sink_percent}% ", foreground: ffff00ff}
-          - string: {text: " | "}
-
-    - backlight:
-        name: intel_backlight
-        content:
-          - string: {text: " 󰃠 {percent}% "}
-          - string: {text: " | "}
-
     - network:
         name: en1
         content:
@@ -94,6 +71,24 @@ bar:
         path: ~/bin/systower
         args: ["watch"]
         content:
+          # Vol
+          - map:
+              on-click: pavucontrol
+              default:
+                - string: {text: " 󰕾 {vol_percent}% "}
+              conditions:
+                vol_muted:
+                  - string: {text: " 󰝟 {vol_percent}% ", foreground: ff0000ff}
+                vol_percent == 0:
+                  - string: {text: " 󰖁 {vol_percent}% "}
+                vol_percent < 70:
+                  - string: {text: " 󰖀 {vol_percent}% "}
+                vol_percent > 100:
+                  - string: {text: " 󰕾 {vol_percent}% ", foreground: ffff00ff}
+          - string: {text: " | "}
+          # Backlight
+          - string: {text: " 󰃠 {backlight_percent}% "}
+          - string: {text: " | "}
           # CPU
           - map:
               on-click: foot htop
