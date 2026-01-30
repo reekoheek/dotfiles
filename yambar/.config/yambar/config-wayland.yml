@@ -7,18 +7,17 @@ bar:
   spacing: 0
   margin: 0
   font: JetBrainsMono Nerd Font:pixelsize=16
-  foreground: ffffffff
+  foreground: eeeeeeff
   # background: 00000000
   # background: 000000ff
   # background: 66333366
   background: 111111ff
 
-  # border:
-  #   width: 0
-  #   bottom-width: 1
-  #   color: 666666cc
-  #   # color: 660000ff
-  #   margin: 0
+  border:
+    width: 0
+    bottom-width: 1
+    color: eeeeeeff
+    margin: 0
 
   left:
     - foreign-toplevel:
