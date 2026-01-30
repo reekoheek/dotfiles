@@ -130,18 +130,23 @@ bar:
           - map:
               on-click: gnome-power-statistics
               default:
-                - string: {text: " 󰁹 {bat_percent}% {bat_estimate}"}
+                - string: {text: " 󰁹 {bat_percent}%"}
               conditions:
-                bat_status == "charging" && bat_percent >= 95:
-                  - string: {text: " 󰂄 {bat_percent}% {bat_estimate}", foreground: 00ff00ff}
-                bat_status == "charging":
-                  - string: {text: " 󰂄 {bat_percent}% {bat_estimate}"}
-                bat_percent <= 15:
-                  - string: {text: " 󰂎 {bat_percent}% {bat_estimate}", foreground: ff0000ff}
-                bat_percent <= 50:
-                  - string: {text: " 󰁾 {bat_percent}% {bat_estimate}", foreground: ffff00ff}
                 bat_status == "full":
                   - string: {text: " 󰁹 {bat_percent}%", foreground: 00ff00ff}
+                bat_status == "charging" && bat_percent >= 95:
+                  - string: {text: " 󰂄 {bat_percent}%", foreground: 00ff00ff}
+                bat_status == "charging":
+                  - string: {text: " 󰂄 {bat_percent}%"}
+                bat_percent <= 15:
+                  - string: {text: " 󰂎 {bat_percent}%", foreground: ff0000ff}
+                bat_percent <= 50:
+                  - string: {text: " 󰁾 {bat_percent}%", foreground: ffff00ff}
+          - map:
+              default: {empty: {}}
+              conditions:
+                bat_estimate != "":
+                  - string: {text: " {bat_estimate}"}
           # Caffeine
           - map:
               on-click: ~/bin/systower caffeine toggle
