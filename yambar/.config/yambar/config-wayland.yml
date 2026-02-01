@@ -13,11 +13,11 @@ bar:
   # background: 66333366
   background: 111111ff
 
-  border:
-    width: 0
-    bottom-width: 1
-    color: eeeeeeff
-    margin: 0
+  # border:
+  #   width: 0
+  #   bottom-width: 1
+  #   color: eeeeeeff
+  #   margin: 0
 
   left:
     - foreign-toplevel:
@@ -26,9 +26,7 @@ bar:
             conditions:
               ~activated: {empty: {}}
               activated:
-                - string: {text: " 󰘔 {app-id}"}
-                - string: {text: "  "}
-                - string: {text: "{title}"}
+                - string: {text: " 󰘔 {app-id} ⦿ {title}"}
                 - string: {text: "  "}
 
   # center:
