@@ -4,7 +4,6 @@ wlr-randr --output eDP-1 --mode 2880x1800@60.000999
 
 ln -sf $HOME/.config/yambar/config-wayland.yml $HOME/.config/yambar/config.yml
 
-$HOME/scripts/monitor-res.sh > /dev/null 2>&1 &
 mako > /dev/null 2>&1 &
 
 # clipboard and screen sharing
@@ -20,7 +19,7 @@ sleep 3
 
 $HOME/scripts/configure-keyboard.sh > /dev/null 2>&1 &
 kdeconnect-cli > /dev/null 2>&1 &
-$HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
+# $HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
 
 foot > /dev/null 2>&1 &
 $HOME/opt/zen/zen -P default > /dev/null 2>&1 &
