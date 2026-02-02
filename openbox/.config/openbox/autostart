@@ -2,7 +2,7 @@
 # xrandr --output eDP-1 --mode 1920x1200 > /dev/null 2>&1 &
 
 ln -sf $HOME/.config/yambar/config-x11.yml $HOME/.config/yambar/config.yml
-yambar > /dev/null 2>&1 &
+$HOME/scripts/update-res.sh > /dev/null 2>&1 &
 
 dunst > /dev/null 2>&1 &
 #picom > /dev/null 2>&1 &
