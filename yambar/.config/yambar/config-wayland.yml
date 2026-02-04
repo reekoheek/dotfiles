@@ -31,45 +31,38 @@ bar:
 
   # center:
   right:
-    - network:
-        name: en1
-        content:
-          - string: {text: "  "}
-          - map:
-              default: {empty: {}}
-              conditions:
-                name == en1 && carrier:
-                  - map:
-                      default: {string: {text: " 󰈀 - ", foreground: ffffff66}}
-                      conditions:
-                        state == up && ipv4 != "": {string: {text: " 󰈀 {ipv4} "}}
-                  - string: {text: "  "}
-
-    - network:
-        name: wlo1
-        content:
-          - map:
-              default: {empty: {}}
-              conditions:
-                name == wlo1:
-                  map:
-                    on-click: foot nmtui
-                    default: {string: {text: " 󰤨 down ", foreground: ffffff66}}
-                    conditions:
-                      state == down: {string: {text: " 󰤮 down ", foreground: ff0000ff}}
-                      state == up:
-                        map:
-                          default:
-                            - string: {text: " 󰤨 {ssid} {ipv4} "}
-                          conditions:
-                            ipv4 == "":
-                              - string: {text: " 󰤨 {ssid} - ", foreground: ffffff66}
-          - string: {text: "  "}
-
     - script:
         path: ~/bin/systower
         args: ["watch"]
         content:
+          # Eth
+          - string: {text: "  "}
+          - map:
+              on-click: foot nmtui
+              default: {empty: {}}
+              conditions:
+                eth_state:
+                  map:
+                    default:
+                      - string: {text: " 󰈀 - ", foreground: ffffff66}
+                    conditions:
+                      eth_ipv4 == "":
+                        - string: {text: " 󰈀 {ipv4} "}
+                        - string: {text: "  "}
+          # Wifi
+          - map:
+              on-click: foot nmtui
+              default: {string: {text: " 󰤨 down ", foreground: ffffff66}}
+              conditions:
+                ~wifi_state: {string: {text: " 󰤮 down ", foreground: ff0000ff}}
+                wifi_state:
+                  map:
+                    default:
+                      - string: {text: " 󰤨 {wifi_ssid} {wifi_ipv4} "}
+                    conditions:
+                      wifi_ipv4 == "":
+                        - string: {text: " 󰤨 {wifi_ssid} - ", foreground: ffffff66}
+          - string: {text: "  "}
           # Vol
           - map:
               on-click: pavucontrol
