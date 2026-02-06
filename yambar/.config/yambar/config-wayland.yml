@@ -52,16 +52,15 @@ bar:
           # Wifi
           - map:
               on-click: foot nmtui
-              default: {string: {text: " 󰤨 down ", foreground: ffffff66}}
+              default: {string: {text: " 󰤮 down ", foreground: ffffff99}}
               conditions:
-                ~wifi_state: {string: {text: " 󰤮 down ", foreground: ff0000ff}}
                 wifi_state:
                   map:
                     default:
-                      - string: {text: " 󰤨 {wifi_ssid} {wifi_ipv4} "}
+                      - string: {text: " 󰤨  {wifi_ssid} {wifi_ipv4} "}
                     conditions:
                       wifi_ipv4 == "":
-                        - string: {text: " 󰤨 {wifi_ssid} - ", foreground: ffffff66}
+                        - string: {text: " 󰤨  {wifi_ssid} - ", foreground: ffffff99}
           - string: {text: "  "}
           # Vol
           - map:
@@ -80,6 +79,17 @@ bar:
           - string: {text: "  "}
           # Backlight
           - string: {text: " 󰃠 {backlight_percent}% "}
+          - string: {text: "  "}
+          # Temp
+          - map:
+              on-click: foot htop
+              default:
+                - string: {text: " 󰔄 {cpu_temp}% "}
+              conditions:
+                cpu_temp > 90:
+                  - string: {text: " 󰔄 {cpu_temp}% ", foreground: ff0000ff}
+                cpu_temp > 75:
+                  - string: {text: " 󰔄 {cpu_temp}% ", foreground: ffff00ff}
           - string: {text: "  "}
           # CPU
           - map:
