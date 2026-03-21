@@ -18,4 +18,4 @@ kdeconnect-cli > /dev/null 2>&1 &
 $HOME/opt/postman-agent/Postman\ Agent > /dev/null 2>&1 &
 
 alacritty > /dev/null 2>&1 &
-$HOME/opt/zen/zen -P default > /dev/null 2>&1 &
+gtk-launch userapp-Zen-MZOH22 > /dev/null 2>&1 &

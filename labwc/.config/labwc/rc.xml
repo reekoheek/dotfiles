@@ -226,22 +226,6 @@
 			<action name="Execute" command="fuzzel" />
 		</keybind>
 
-		<keybind key="W-Return">
-			<action name="Execute" command="foot" />
-		</keybind>
-
-		<keybind key="W-w">
-			<action name="Execute">
-				<command>/home/reekoheek/opt/zen/zen -P default</command>
-			</action>
-		</keybind>
-
-		<keybind key="W-e">
-			<action name="Execute">
-				<command>gtk-launch yazi.desktop</command>
-			</action>
-		</keybind>
-
 		<keybind key="W-p">
 			<action name="Execute">
 				<command>sh -c 'flameshot full --raw | tee ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png | wl-copy'</command>

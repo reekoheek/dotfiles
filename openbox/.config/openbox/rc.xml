@@ -356,25 +356,6 @@
 				<command>rofi -show combi</command>
 			</action>
 		</keybind>
-		<keybind key="W-Return">
-			<action name="Execute">
-				<command>alacritty</command>
-			</action>
-		</keybind>
-		<keybind key="W-w">
-			<action name="Execute">
-				<command>
-					/home/reekoheek/opt/zen/zen -P default
-				</command>
-			</action>
-		</keybind>
-		<keybind key="W-e">
-			<action name="Execute">
-				<command>
-					gtk-launch yazi.desktop
-				</command>
-			</action>
-		</keybind>
 		<keybind key="W-p">
 			<action name="Execute">
 				<command> flameshot full -c -p ~/Pictures/Screenshots </command>
