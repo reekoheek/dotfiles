@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Toggle Caffeine
-Comment=Toggle caffeine to inhibit sleep
-Exec=/home/reekoheek/bin/systower caffeine toggle
-Icon=/home/reekoheek/.local/share/icons/coffee.svg
-Terminal=false
-Type=Application
-#Categories=Wine;
-#StartupNotify=true

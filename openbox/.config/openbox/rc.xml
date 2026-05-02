@@ -4,7 +4,6 @@
 		<strength>10</strength>
 		<screen_edge_strength>20</screen_edge_strength>
 	</resistance>
-
 	<focus>
 		<focusNew>yes</focusNew>
 		<followMouse>no</followMouse>
@@ -13,16 +12,14 @@
 		<focusDelay>200</focusDelay>
 		<raiseOnFocus>yes</raiseOnFocus>
 	</focus>
-
 	<placement>
 		<policy>UnderMouse</policy>
 		<center>yes</center>
 		<monitor>Primary</monitor>
 		<primaryMonitor>1</primaryMonitor>
 	</placement>
-
 	<theme>
-		<name>reekoheek</name>
+		<name>Syscrash</name>
 		<titleLayout>NLIMC</titleLayout>
 		<keepBorder>yes</keepBorder>
 		<animateIconify>no</animateIconify>
@@ -63,9 +60,8 @@
 			<slant>normal</slant>
 		</font>
 	</theme>
-
 	<desktops>
-		<number>2</number>
+		<number>4</number>
 		<firstdesk>1</firstdesk>
 		<names>
 			<name> Desktop 1 </name>
@@ -719,10 +715,7 @@
 			<focus>no</focus>
 			<layer>above</layer>
 		</application>
-		<application title="wezterm">
-			<maximized>true</maximized>
-		</application>
-		<application name="teams-for-linux">
+		<application class="Alacritty">
 			<maximized>true</maximized>
 		</application>
 	</applications>

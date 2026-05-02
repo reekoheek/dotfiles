@@ -9,11 +9,13 @@
 	</theme>
 
 	<desktops>
-		<number>2</number>
+		<number>4</number>
 		<firstdesk>1</firstdesk>
 		<names>
 			<name>Desktop 1</name>
 			<name>Desktop 2</name>
+			<name>Desktop 3</name>
+			<name>Desktop 4</name>
 		</names>
 		<popupTime>875</popupTime>
 	</desktops>
@@ -59,6 +61,14 @@
 
 		<keybind key="S-A-Right">
 			<action name="SendToDesktop" to="right" wrap="yes" />
+		</keybind>
+
+		<keybind key="C-A-equal">
+			<action name="DesktopAdd" />
+		</keybind>
+
+		<keybind key="C-A-minus">
+			<action name="DesktopRemove" />
 		</keybind>
 
 		<keybind key="W-1">
