@@ -4,6 +4,7 @@
 		<strength>10</strength>
 		<screen_edge_strength>20</screen_edge_strength>
 	</resistance>
+
 	<focus>
 		<focusNew>yes</focusNew>
 		<followMouse>no</followMouse>
@@ -12,12 +13,14 @@
 		<focusDelay>200</focusDelay>
 		<raiseOnFocus>yes</raiseOnFocus>
 	</focus>
+
 	<placement>
 		<policy>UnderMouse</policy>
 		<center>yes</center>
 		<monitor>Primary</monitor>
 		<primaryMonitor>1</primaryMonitor>
 	</placement>
+
 	<theme>
 		<name>Syscrash</name>
 		<titleLayout>NLIMC</titleLayout>
@@ -60,8 +63,9 @@
 			<slant>normal</slant>
 		</font>
 	</theme>
+
 	<desktops>
-		<number>4</number>
+		<number>2</number>
 		<firstdesk>1</firstdesk>
 		<names>
 			<name> Desktop 1 </name>
@@ -76,6 +80,7 @@
 		</names>
 		<popupTime>875</popupTime>
 	</desktops>
+
 	<resize>
 		<drawContents>yes</drawContents>
 		<popupShow>Nonpixel</popupShow>
@@ -85,12 +90,14 @@
 			<y>10</y>
 		</popupFixedPosition>
 	</resize>
+
 	<margins>
 		<top>0</top>
 		<bottom>0</bottom>
 		<left>0</left>
 		<right>0</right>
 	</margins>
+
 	<dock>
 		<position>TopLeft</position>
 		<floatingX>0</floatingX>
@@ -103,6 +110,7 @@
 		<showDelay>300</showDelay>
 		<moveButton>Middle</moveButton>
 	</dock>
+
 	<keyboard>
 		<chainQuitKey>C-g</chainQuitKey>
 		<!-- window manager -->
@@ -349,7 +357,7 @@
 		<!-- application -->
 		<keybind key="W-space">
 			<action name="Execute">
-				<command>rofi -show combi</command>
+				<command>rofi -show drun</command>
 			</action>
 		</keybind>
 		<keybind key="W-p">
@@ -363,6 +371,7 @@
 			</action>
 		</keybind>
 	</keyboard>
+
 	<mouse>
 		<dragThreshold>1</dragThreshold>
 		<doubleClickTime>500</doubleClickTime>
@@ -689,6 +698,7 @@
 			</mousebind>
 		</context>
 	</mouse>
+
 	<menu>
 		<file>/var/lib/openbox/debian-menu.xml</file>
 		<file>menu.xml</file>
@@ -699,6 +709,7 @@
 		<showIcons>yes</showIcons>
 		<manageDesktops>yes</manageDesktops>
 	</menu>
+
 	<applications>
 		<application class="*">
 			<decor>no</decor>

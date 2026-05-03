@@ -14,15 +14,27 @@ notify() {
 		polybar-msg action "#caffeine.hook.0" >/dev/null 2>&1
 }
 
+start_xidlehook() {
+	pkill -x xidlehook >/dev/null 2>&1
+	xidlehook --not-when-audio --not-when-fullscreen \
+		--timer 600 'systemctl suspend' '' >/dev/null 2>&1 &
+}
+
+stop_xidlehook() {
+	pkill -x xidlehook >/dev/null 2>&1
+}
+
 set_on() {
 	xset s 0
 	xset dpms 0 0 0
+	stop_xidlehook
 	notify
 }
 
 set_off() {
 	xset s 180
 	xset dpms 0 0 180
+	start_xidlehook
 	notify
 }
 

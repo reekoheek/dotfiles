@@ -1,8 +1,10 @@
 @theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
 
 configuration {
-	modi: "combi";
-	combi-modi: "drun,window";
-	show: "combi";
+	modes: "drun,window";
 	show-icons: true;
+       	display-drun: "Applications";
+       	display-window: "Running";
+       	window-format: "{w} · {c} · {t}";
+	sidebar-mode: true;
 }
