@@ -1,8 +1,11 @@
 #!/bin/sh
 
+is_on() {
+	! pgrep -x xidlehook >/dev/null 2>&1
+}
+
 status() {
-	result=$(xset q | awk '/Off:/ { print $6 }')
-	if [ "$result" = "0" ]; then
+	if is_on; then
 		echo "caffeine: on"
 	else
 		echo "caffeine: off"
@@ -14,32 +17,27 @@ notify() {
 		polybar-msg action "#caffeine.hook.0" >/dev/null 2>&1
 }
 
-start_xidlehook() {
-	pkill -x xidlehook >/dev/null 2>&1
-	xidlehook --not-when-audio --not-when-fullscreen \
-		--timer 600 'systemctl suspend' '' >/dev/null 2>&1 &
-}
-
-stop_xidlehook() {
+reset() {
+	xset s 0
+	xset dpms 0 0 0
 	pkill -x xidlehook >/dev/null 2>&1
 }
 
 set_on() {
-	xset s 0
-	xset dpms 0 0 0
-	stop_xidlehook
+	reset
 	notify
 }
 
 set_off() {
-	xset s 180
-	xset dpms 0 0 180
-	start_xidlehook
+	reset
+	xidlehook --not-when-audio --not-when-fullscreen \
+		--timer 300 'xset dpms force off' '' \
+		--timer 600 'systemctl suspend' '' >/dev/null 2>&1 &
 	notify
 }
 
 toggle() {
-	if [ "$(status)" = "caffeine: on" ]; then
+	if is_on; then
 		set_off
 	else
 		set_on
@@ -47,17 +45,9 @@ toggle() {
 }
 
 case "$1" in
-on)
-	set_on
-	;;
-off)
-	set_off
-	;;
-toggle)
-	toggle
-	;;
-*)
-	;;
+on) set_on ;;
+off) set_off ;;
+toggle) toggle ;;
 esac
 
 status
