@@ -2,6 +2,9 @@
 # xrandr --output eDP-1 --mode 1920x1200 > /dev/null 2>&1 &
 
 dbus-update-activation-environment --systemd GTK_THEME 2>/dev/null
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark' &
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' &
+
 feh --bg-center ~/Pictures/semar3.png > /dev/null 2>&1 &
 ~/.config/polybar/launch.sh > /dev/null 2>&1 &
 dunst > /dev/null 2>&1 &
@@ -11,7 +14,7 @@ caffeine.sh off > /dev/null 2>&1 &
 libinput-gestures > /dev/null 2>&1 &
 setxkbmap -option caps:escape
 xinput set-prop 7 "libinput Natural Scrolling Enabled" 1
-notify-send Keyboard "Keyboard configured"
+# notify-send Keyboard "Keyboard configured"
 
 sleep 3
 
