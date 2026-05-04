@@ -7,4 +7,7 @@ configuration {
        	display-window: "Running";
        	window-format: "{w} · {c} · {t}";
 	sidebar-mode: true;
+	me-select-entry: "";
+	me-accept-entry: "MousePrimary";
+	hover-select: true;
 }
