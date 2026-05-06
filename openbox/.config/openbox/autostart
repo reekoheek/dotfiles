@@ -1,3 +1,4 @@
+xrandr --output eDP-1 --mode 2880x1800 --rate 60
 # xrandr --output eDP-1 --mode 2560x1600 > /dev/null 2>&1 &
 # xrandr --output eDP-1 --mode 1920x1200 > /dev/null 2>&1 &
 
@@ -8,15 +9,14 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' &
 feh --bg-center ~/Pictures/semar3.png > /dev/null 2>&1 &
 ~/.config/polybar/launch.sh > /dev/null 2>&1 &
 dunst > /dev/null 2>&1 &
-
 caffeine.sh off > /dev/null 2>&1 &
+
+sleep 3
 
 libinput-gestures > /dev/null 2>&1 &
 setxkbmap -option caps:escape
 xinput set-prop 7 "libinput Natural Scrolling Enabled" 1
 # notify-send Keyboard "Keyboard configured"
-
-sleep 3
 
 kdeconnect-cli --refresh > /dev/null 2>&1 &
 alacritty > /dev/null 2>&1 &

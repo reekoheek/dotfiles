@@ -1,3 +1,7 @@
 export XDG_CURRENT_DESKTOP=GNOME:Openbox
 export GTK_THEME=Adwaita:dark
 export QT_QUICK_CONTROLS_STYLE=org.kde.desktop
+
+export LIBVA_DRIVER_NAME=iHD
+export MOZ_DISABLE_RDD_SANDBOX=1
+export MOZ_X11_EGL=1
