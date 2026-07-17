@@ -5,11 +5,13 @@ xrandr --output eDP-1 --mode 2880x1800 --rate 60
 dbus-update-activation-environment --systemd GTK_THEME 2>/dev/null
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark' &
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' &
+eval $(gnome-keyring-daemon --start --components=secrets,pkcs11)
+export SSH_AUTH_SOCK
 
 feh --bg-center ~/Pictures/semar3.png > /dev/null 2>&1 &
 ~/.config/polybar/launch.sh > /dev/null 2>&1 &
 dunst > /dev/null 2>&1 &
-caffeine.sh off > /dev/null 2>&1 &
+caffeine off > /dev/null 2>&1 &
 
 sleep 3
 
@@ -18,6 +20,14 @@ setxkbmap -option caps:escape
 xinput set-prop 7 "libinput Natural Scrolling Enabled" 1
 # notify-send Keyboard "Keyboard configured"
 
-kdeconnect-cli --refresh > /dev/null 2>&1 &
+systemctl --user restart browser-control.service
+
+# kdeconnect-cli --refresh > /dev/null 2>&1 &
 alacritty > /dev/null 2>&1 &
-gtk-launch zen > /dev/null 2>&1 &
+# gtk-launch zen > /dev/null 2>&1 &
+gtk-launch vivaldi-stable > /dev/null 2>&1 &
+
+sleep 2
+gtk-launch vivaldi-hnpfjngllnobngcgfapefoaidbinmjnm-Default > /dev/null 2>&1 &
+gtk-launch vivaldi-ompifgpmddkgmclendfeacglnodjjndh-Default > /dev/null 2>&1 &
+gtk-launch vivaldi-majiogicmcnmdhhlgmkahaleckhjbmlk-Default > /dev/null 2>&1 &
