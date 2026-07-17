@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""
+Fetch a web page using browserctl and convert its HTML to markdown via markit.
+
+Receives JSON from stdin: {"url": "https://example.com"}
+"""
+
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import time
+from typing import Any
+
+sys.dont_write_bytecode = True
+
+WINDOW_FILE = os.path.expanduser("~/.cache/webwin")
+
+
+def browserctl(*args: str) -> Any:
+    """Run a browserctl command. Return JSON if -j/--json in args, else raw stdout."""
+    want_json = "-j" in args or "--json" in args
+    result = subprocess.run(["browserctl"] + list(args), capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(f"browserctl {' '.join(args)}: {result.stderr.strip()}")
+    return json.loads(result.stdout) if want_json else result.stdout.strip()
+
+
+def with_retry(fn, attempts: int = 3, delay: float = 2.0):
+    """Call fn(), retrying on RuntimeError up to `attempts` times."""
+    last_exc: RuntimeError | None = None
+    for i in range(attempts):
+        try:
+            return fn()
+        except RuntimeError as e:
+            last_exc = e
+            if i < attempts - 1:
+                time.sleep(delay)
+    assert last_exc is not None
+    raise last_exc
+
+
+def get_window_id() -> int:
+    """Return the dedicated webfetch window id, creating the window if needed.
+
+    Reads the saved id from WINDOW_FILE and checks it against the live window
+    list. If it is missing (file absent or window closed), open a new window
+    and persist its id.
+    """
+    saved_id = None
+    try:
+        with open(WINDOW_FILE, encoding="utf-8") as f:
+            saved_id = int(f.read().strip())
+    except (OSError, ValueError):
+        saved_id = None
+
+    windows = browserctl("-j", "windows")
+    live_ids = {w.get("id") for w in windows}
+
+    if saved_id is not None and saved_id in live_ids:
+        return saved_id
+
+    window_info = browserctl("-j", "new-window", "about:blank")
+    window_id = window_info["id"]
+    os.makedirs(os.path.dirname(WINDOW_FILE), exist_ok=True)
+    with open(WINDOW_FILE, "w", encoding="utf-8") as f:
+        f.write(str(window_id))
+    return window_id
+
+
+def main():
+    url = sys.argv[1]
+
+    # Open page in the dedicated webfetch window
+    window_id = get_window_id()
+    tab_info = with_retry(lambda: browserctl("-j", "open", "-w", str(window_id), "--active", url))
+    tab_id = str(tab_info.get("tabId") or tab_info.get("id"))
+    if not tab_id:
+        print("Could not get tab ID", file=sys.stderr)
+        sys.exit(1)
+
+    time.sleep(3)
+
+    # Pick the best content container in-page (prefer semantic containers,
+    # fall back to body) and return its HTML directly.
+    js = """
+    () => {
+        const selectors = ['article', 'main', 'body'];
+        const el = selectors.map(s => document.querySelector(s)).find(Boolean) || document.body;
+        return el.outerHTML;
+    }
+    """
+    html = browserctl("-j", "eval", "-t", tab_id, js)
+    browserctl("close", "-t", tab_id)
+
+    # Convert to markdown
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".html", delete=False, encoding="utf-8") as f:
+        f.write(html)
+        tmp_path = f.name
+
+    try:
+        result = subprocess.run(["markit", tmp_path, "-q"], capture_output=True, text=True, check=False)
+        if result.returncode != 0:
+            print(f"markit error: {result.stderr.strip()}", file=sys.stderr)
+            return
+        print(result.stdout.strip())
+    finally:
+        os.unlink(tmp_path)
+
+
+if __name__ == "__main__":
+    main()

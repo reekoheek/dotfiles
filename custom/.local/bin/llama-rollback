@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Roll the llama.cpp prebuilt back to the previous version or a specific one.
+#   llama-rollback            -> previous version (.previous)
+#   llama-rollback bXXXXX      -> specific version
+#   llama-rollback -l          -> list installed versions
+set -euo pipefail
+
+INSTALL_DIR="${LLAMA_DIR:-$HOME/.local/share/llama.cpp}"
+SERVICE="llama-server"
+
+# Symlink every executable in $1 into ~/.local/bin (via 'current'). First remove stale
+# 'llama' and 'llama-*' symlinks, but never our own scripts.
+relink_bins() {
+  local dir="$1" bindir="$HOME/.local/bin" l b f
+  for l in "$bindir"/llama "$bindir"/llama-*; do
+    [[ -L "$l" ]] || continue
+    b="$(basename "$l")"
+    [[ "$b" == "llama-update" || "$b" == "llama-rollback" ]] && continue
+    rm -f "$l"
+  done
+  for f in "$dir"/*; do
+    [[ -f "$f" && -x "$f" ]] || continue
+    b="$(basename "$f")"
+    case "$b" in *.so|*.so.*) continue ;; esac
+    ln -sfn "$INSTALL_DIR/current/$b" "$bindir/$b"
+  done
+}
+
+list() {
+  local cur; cur="$(basename "$(readlink -f "$INSTALL_DIR/current" 2>/dev/null || echo none)")"
+  echo "Installed in $INSTALL_DIR:"
+  ls -1dt "$INSTALL_DIR"/llama-* 2>/dev/null | xargs -r -n1 basename | while read -r v; do
+    [[ "$v" == "$cur" ]] && echo "  * $v (current)" || echo "    $v"
+  done
+}
+
+case "${1:-}" in
+  -l|--list) list; exit 0 ;;
+esac
+
+target="${1:-}"
+if [[ -z "$target" ]]; then
+  target="$(cat "$INSTALL_DIR/.previous" 2>/dev/null || true)"
+  [[ -n "$target" ]] || { echo "!! no previous version on record. Pick one manually:"; echo; list; exit 1; }
+fi
+[[ "$target" == llama-* ]] || target="llama-$target"
+
+dir="$INSTALL_DIR/$target"
+[[ -x "$dir/llama-server" ]] || { echo "!! $target missing / incomplete."; echo; list; exit 1; }
+
+cur="$(readlink -f "$INSTALL_DIR/current" 2>/dev/null || true)"
+if [[ "$cur" == "$dir" ]]; then echo "Already on $target. Nothing to do."; exit 0; fi
+[[ -n "$cur" ]] && basename "$cur" > "$INSTALL_DIR/.previous"
+
+ln -sfn "$dir" "$INSTALL_DIR/current"
+relink_bins "$dir"
+echo ">> current -> $target"
+
+if systemctl is-active --quiet "$SERVICE"; then
+  echo ">> restarting $SERVICE ..."
+  sudo systemctl restart "$SERVICE"
+  echo ">> status: $(systemctl is-active "$SERVICE")"
+fi
+
+echo -n ">> active: "; "$dir/llama-server" --version 2>&1 | head -1
+

@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+# Install/upgrade the official llama.cpp prebuilt (Vulkan) to the latest release or a specific build.
+#   llama-update             -> latest release
+#   llama-update bXXXXX       -> specific build (pin)
+#   llama-update -f           -> force: re-download/re-activate even if already current
+# Env override: LLAMA_DIR (default ~/.local/share/llama.cpp), LLAMA_KEEP (default 3)
+set -euo pipefail
+
+INSTALL_DIR="${LLAMA_DIR:-$HOME/.local/share/llama.cpp}"
+KEEP="${LLAMA_KEEP:-3}"
+SERVICE="llama-server"
+ASSET="ubuntu-vulkan-x64.tar.gz"
+REPO="ggml-org/llama.cpp"
+
+# Symlink every executable in $1 into ~/.local/bin (via 'current', so they follow the active
+# version). First remove stale 'llama' and 'llama-*' symlinks, but never our own scripts.
+relink_bins() {
+  local dir="$1" bindir="$HOME/.local/bin" l b f
+  for l in "$bindir"/llama "$bindir"/llama-*; do
+    [[ -L "$l" ]] || continue                       # only touch symlinks, never real files
+    b="$(basename "$l")"
+    [[ "$b" == "llama-update" || "$b" == "llama-rollback" ]] && continue
+    rm -f "$l"
+  done
+  for f in "$dir"/*; do
+    [[ -f "$f" && -x "$f" ]] || continue
+    b="$(basename "$f")"
+    case "$b" in *.so|*.so.*) continue ;; esac       # skip shared libraries
+    ln -sfn "$INSTALL_DIR/current/$b" "$bindir/$b"
+  done
+}
+
+force=0; want=""
+for a in "$@"; do
+  case "$a" in
+    -f|--force) force=1 ;;
+    -h|--help)  sed -n '2,6p' "$0" | sed 's/^# \?//'; exit 0 ;;
+    -*) echo "!! unknown flag: $a"; exit 1 ;;
+    *)  want="$a" ;;
+  esac
+done
+
+api="https://api.github.com/repos/$REPO/releases"
+if [[ -n "$want" ]]; then rel="$api/tags/$want"; else rel="$api/latest"; fi
+
+meta="$(curl -fsSL "$rel")" || { echo "!! failed to fetch release metadata"; exit 1; }
+tag="$(printf '%s' "$meta" | grep '"tag_name"' | head -1 | sed -E 's/.*"tag_name":[[:space:]]*"([^"]+)".*/\1/')"
+[[ -n "$tag" ]] || { echo "!! could not resolve release tag"; exit 1; }
+url="$(printf '%s' "$meta" | grep '"browser_download_url"' | grep "$ASSET" | head -1 | sed -E 's/.*"(https[^"]+)".*/\1/')"
+[[ -n "$url" ]] || { echo "!! asset $ASSET not found in release $tag"; exit 1; }
+
+dest="$INSTALL_DIR/llama-$tag"
+cur="$(readlink -f "$INSTALL_DIR/current" 2>/dev/null || true)"
+
+if [[ "$cur" == "$dest" && -x "$dest/llama-server" && "$force" -eq 0 ]]; then
+  echo "Already on $tag (current). Nothing to do. Use -f to force."
+  exit 0
+fi
+
+mkdir -p "$INSTALL_DIR"
+
+if [[ ! -x "$dest/llama-server" || "$force" -eq 1 ]]; then
+  tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
+  echo ">> downloading $tag ..."
+  curl -fL# "$url" -o "$tmp/pkg.tar.gz"
+  echo ">> extracting ..."
+  mkdir -p "$dest"
+  tar xzf "$tmp/pkg.tar.gz" -C "$dest" --strip-components=1
+  [[ -x "$dest/llama-server" ]] || { echo "!! extraction failed"; rm -rf "$dest"; exit 1; }
+else
+  echo ">> $tag already downloaded; activating it."
+fi
+
+# record the old version for quick rollback, then flip the 'current' symlink (atomic)
+[[ -n "$cur" && "$cur" != "$dest" ]] && basename "$cur" > "$INSTALL_DIR/.previous"
+ln -sfn "$dest" "$INSTALL_DIR/current"
+echo ">> current -> $tag"
+
+# (re)link every executable into ~/.local/bin
+relink_bins "$dest"
+
+# restart the service only if ExecStart already points at this prebuilt
+exec_line="$(systemctl cat "$SERVICE" 2>/dev/null | grep -m1 '^ExecStart=' || true)"
+if [[ "$exec_line" != *"$INSTALL_DIR/current/llama-server"* ]]; then
+  echo
+  echo "!! Service '$SERVICE' does not point at this prebuilt yet. Run ONCE (needs sudo):"
+  echo "   sudo sed -i 's#^ExecStart=.*llama-server#ExecStart=$INSTALL_DIR/current/llama-server#' /etc/systemd/system/$SERVICE.service"
+  echo "   sudo systemctl daemon-reload && sudo systemctl restart $SERVICE"
+elif systemctl is-active --quiet "$SERVICE"; then
+  echo ">> restarting $SERVICE ..."
+  sudo systemctl restart "$SERVICE"
+  echo ">> status: $(systemctl is-active "$SERVICE")"
+else
+  echo ">> $SERVICE is not active; not restarting (start manually: sudo systemctl start $SERVICE)"
+fi
+
+# prune old versions: keep the newest $KEEP, never remove current/previous
+if [[ "$KEEP" -gt 0 ]]; then
+  prev="$(cat "$INSTALL_DIR/.previous" 2>/dev/null || true)"
+  ls -1dt "$INSTALL_DIR"/llama-* 2>/dev/null | tail -n +$((KEEP+1)) | while read -r d; do
+    b="$(basename "$d")"
+    [[ "$b" == "llama-$tag" || "$b" == "$prev" ]] && continue
+    echo ">> pruning $b"; rm -rf "$d"
+  done
+fi
+
+echo -n ">> active: "; "$dest/llama-server" --version 2>&1 | head -1
+

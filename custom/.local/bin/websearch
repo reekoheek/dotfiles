@@ -1,0 +1,227 @@
+#!/usr/bin/env python3
+"""
+Google web search using browserctl CLI.
+
+Receives JSON from stdin: {"query": "your search query"}
+"""
+
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+from typing import Any
+
+sys.dont_write_bytecode = True
+
+WINDOW_FILE = os.path.expanduser("~/.cache/webwin")
+
+
+def browserctl(*args: str) -> Any:
+    """Run a browserctl command.
+
+    If args contains -j/--json, parse and return JSON.
+    Otherwise return raw stdout string.
+    """
+    want_json = "-j" in args or "--json" in args
+    cmd = ["browserctl"] + list(args)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(f"browserctl {' '.join(args)}: {result.stderr.strip()}")
+    return json.loads(result.stdout) if want_json else result.stdout.strip()
+
+
+def with_retry(fn, attempts: int = 3, delay: float = 2.0):
+    """Call fn(), retrying on RuntimeError up to `attempts` times."""
+    last_exc: RuntimeError | None = None
+    for i in range(attempts):
+        try:
+            return fn()
+        except RuntimeError as e:
+            last_exc = e
+            if i < attempts - 1:
+                time.sleep(delay)
+    assert last_exc is not None
+    raise last_exc
+
+
+def get_window_id() -> int:
+    """Return the dedicated window id, creating the window if needed.
+
+    Reads the saved id from WINDOW_FILE and checks it against the live window
+    list. If it is missing (file absent or window closed), open a new window
+    and persist its id. Shared with webfetch.py so both use one window.
+    """
+    saved_id = None
+    try:
+        with open(WINDOW_FILE, encoding="utf-8") as f:
+            saved_id = int(f.read().strip())
+    except (OSError, ValueError):
+        saved_id = None
+
+    windows = browserctl("-j", "windows")
+    live_ids = {w.get("id") for w in windows}
+
+    if saved_id is not None and saved_id in live_ids:
+        return saved_id
+
+    window_info = browserctl("-j", "new-window", "about:blank")
+    window_id = window_info["id"]
+    os.makedirs(os.path.dirname(WINDOW_FILE), exist_ok=True)
+    with open(WINDOW_FILE, "w", encoding="utf-8") as f:
+        f.write(str(window_id))
+    return window_id
+
+
+def open_google_search(query: str) -> str | None:
+    """Open a Google search tab in the dedicated window and return the tab ID."""
+    safe_query = "+".join(query.split())
+    url = f"https://www.google.com/search?udm=web&q={safe_query}"
+
+    window_id = get_window_id()
+    tab_info = with_retry(lambda: browserctl("-j", "open", "-w", str(window_id), "--active", url))
+    tab_id = str(tab_info.get("tabId") or tab_info.get("id"))
+    if not tab_id:
+        print("Could not get tab ID from response", file=sys.stderr)
+        return None
+
+    time.sleep(3)
+    return tab_id
+
+
+def get_candidate_refs(tab_id: str) -> list[str]:
+    """Take a snapshot of the search results page and parse results."""
+    result = browserctl("snapshot", "-t", tab_id, "-i")
+
+    refs = []
+    for line in result.splitlines():
+        m = re.search(r"@\S+", line)
+        if m:
+            refs.append(m.group())
+
+    return refs
+
+
+def _parse_snapshot(snapshot: dict, limit: int) -> list[dict]:
+    """Parse browserctl snapshot into structured search results."""
+    results: list[dict] = []
+
+    def walk(node: dict, depth: int = 0):
+        if len(results) >= limit:
+            return
+
+        node_type = node.get("type", "")
+        text = (node.get("text", "") or "").strip()
+        children = node.get("children", [])
+
+        if node_type == "link" and text and depth > 2:
+            href = node.get("href", "")
+            if href and not any(r["url"] == href for r in results):
+                results.append({
+                    "title": text,
+                    "url": href,
+                    "snippet": "",
+                })
+
+        for child in children:
+            walk(child, depth + 1)
+
+    walk(snapshot)
+
+    def extract_text_blocks(node: dict, blocks: list[str]):
+        text = (node.get("text", "") or "").strip()
+        if text and node.get("type") not in ("link", "input", "button"):
+            blocks.append(text)
+        for child in node.get("children", []):
+            extract_text_blocks(child, blocks)
+
+    text_blocks: list[str] = []
+    extract_text_blocks(snapshot, text_blocks)
+
+    snippet_idx = 0
+    for i, r in enumerate(results):
+        for block in text_blocks:
+            if block == r["title"]:
+                continue
+            if len(block) > 30 and snippet_idx <= i:
+                r["snippet"] = block[:200]
+                snippet_idx += 1
+                break
+
+    return results[:limit]
+
+
+def close_tab(tab_id: str):
+    """Close the search tab."""
+    browserctl("close", "-t", tab_id)
+
+
+def get_results_from_refs(tab_id: str, refs: list[str]) -> list[dict]:
+    """Send refs into the tab and collect their data via eval."""
+    js = """() => {
+        const refs = %s;
+
+        const containers = [];
+        for (const ref of refs) {
+            const el = document.querySelector(`[data-bc-ref="${ref}"]`);
+            if (!el) continue;
+            const href = el.getAttribute("href");
+            if (!href) continue;
+            if (!/^https?:\\/\\//.test(href)) continue;
+            if (href.includes("google.co")) continue;
+
+            const container = el.closest("[jscontroller]");
+            if (!container) continue;
+            if (containers.some((c) => c.container === container)) continue;
+
+            const title = el.querySelector('h3').textContent.trim()
+            containers.push({ container, href, title });
+        }
+
+        const results = [];
+        for (const { container, href, title } of containers) {
+            const partEls = [...container.querySelectorAll(":scope > * > *")];
+
+            let desc = '';
+            let dt = undefined;
+            const descBlock = partEls[1];
+            if (descBlock) {
+                const inner = descBlock.querySelector(":scope > *") || descBlock;
+                const spans = [...inner.children];
+                if (spans.length > 1 && /—/.test(spans[0].textContent)) {
+                    dt = spans[0].textContent.replace(/\\s*—\\s*$/, "").trim();
+                    desc = spans[1].textContent.trim();
+                } else {
+                    desc = inner.textContent.trim();
+                }
+            }
+            results.push({ href, title, dt, desc });
+        }
+        return results;
+    }""" % json.dumps(refs)
+    return browserctl("-j", "eval", "-t", tab_id, js)
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Google web search using browserctl CLI.")
+    parser.add_argument("query", nargs='+', help="The search query (multiple words will be joined)")
+    args = parser.parse_args()
+
+    query = ' '.join(args.query)
+
+
+    tab_id = open_google_search(query)
+    if not tab_id:
+        sys.exit(1)
+
+    refs = get_candidate_refs(tab_id)
+    results = get_results_from_refs(tab_id, refs)
+    close_tab(tab_id)
+
+    print(json.dumps(results, indent=2, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()
