@@ -62,8 +62,8 @@ shape = "Block"
 TERM = "xterm-256color"
 
 [font]
-size = 6.0
-# use_thin_strokes = true
+size = 5.5
+#use_thin_strokes = true
 
 [font.bold]
 family = "JetBrains Mono Nerd Font"
