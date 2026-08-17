@@ -87,8 +87,11 @@ def main():
     js = """
     () => {
         const selectors = ['article', 'main', 'body'];
-        const el = selectors.map(s => document.querySelector(s)).find(Boolean) || document.body;
-        return el.outerHTML;
+        for (const s of selectors) {
+            const els = document.querySelectorAll(s);
+            if (els.length === 1) return els[0].outerHTML;
+        }
+        return document.body.outerHTML;
     }
     """
     html = browserctl("-j", "eval", "-t", tab_id, js)
