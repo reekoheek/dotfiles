@@ -370,6 +370,11 @@
 				<command> flameshot gui -c -p ~/Pictures/Screenshots </command>
 			</action>
 		</keybind>
+		<keybind key="W-A-bracketleft">
+			<action name="Execute">
+				<command> screen-record </command>
+			</action>
+		</keybind>
 	</keyboard>
 
 	<mouse>

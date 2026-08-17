@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# Screen recorder for X11 using ffmpeg (region selection via slop).
+# Run with no arguments: selects+records a region if idle, stops if recording.
+
+OUTDIR="${SCREEN_RECORD_DIR:-$HOME/Videos/recordings}"
+FPS="${SCREEN_RECORD_FPS:-60}"
+AUDIO="${SCREEN_RECORD_AUDIO:-system}"   # system (speaker output) | mic | none
+PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/screen-record.pid"
+FILEFILE="${XDG_RUNTIME_DIR:-/tmp}/screen-record.file"
+
+notify() {
+	# Reuse one notification slot (dunst stack tag) so they replace, not stack.
+	command -v notify-send >/dev/null 2>&1 && \
+		notify-send -i camera-video \
+			-h string:x-canonical-private-synchronous:screen-record \
+			"Screen Record" "$1"
+}
+
+is_on() {
+	[ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null
+}
+
+audio_args() {
+	case "$AUDIO" in
+	mic)
+		echo "-f pulse -i default"
+		;;
+	system)
+		local mon
+		mon="$(pactl get-default-sink 2>/dev/null).monitor"
+		echo "-f pulse -i $mon"
+		;;
+	*)
+		echo ""
+		;;
+	esac
+}
+
+geometry() {
+	# Emit "WxH+X+Y" from an interactive slop selection.
+	command -v slop >/dev/null 2>&1 || {
+		notify "slop not installed — run: sudo pacman -S slop"
+		return 1
+	}
+	notify "Select a region to record"
+	# -o disables OpenGL (openbox has no compositor); -q silences the warning.
+	slop -o -q -f '%wx%h+%x+%y' || return 1
+}
+
+set_on() {
+	mkdir -p "$OUTDIR"
+
+	local geo size offset out
+	geo="$(geometry)" || { notify "Selection cancelled"; return 1; }
+	# Parse slop's "WxH+X+Y" output into its four components.
+	local w h x y rest
+	w="${geo%%x*}"
+	rest="${geo#*x}"       # H+X+Y
+	h="${rest%%+*}"
+	rest="${rest#*+}"      # X+Y
+	x="${rest%%+*}"
+	y="${rest#*+}"
+	# x11grab wants the capture offset as +X,Y (comma-separated); a "+X+Y"
+	# form silently drops the Y offset, recording from the top of the screen.
+	offset="+${x},${y}"
+	# ffmpeg needs even dimensions for yuv420p; round each down.
+	size="$(( w - w % 2 ))x$(( h - h % 2 ))"
+	out="$OUTDIR/$(date +%Y-%m-%d_%H-%M-%S).mp4"
+
+	# shellcheck disable=SC2046
+	ffmpeg -nostdin -y \
+		-f x11grab -framerate "$FPS" -video_size "$size" \
+		-i "${DISPLAY}$offset" \
+		$(audio_args) \
+		-c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p \
+		-movflags +faststart \
+		"$out" >/dev/null 2>&1 &
+
+	echo $! >"$PIDFILE"
+	echo "$out" >"$FILEFILE"
+	notify "Recording started"
+}
+
+set_off() {
+	# SIGINT lets ffmpeg finalise the container (moov atom).
+	kill -INT "$(cat "$PIDFILE")" 2>/dev/null
+	wait "$(cat "$PIDFILE")" 2>/dev/null
+	rm -f "$PIDFILE"
+
+	local out
+	out="$(cat "$FILEFILE" 2>/dev/null)"
+	rm -f "$FILEFILE"
+	notify "Recording saved${out:+: $out}"
+}
+
+if is_on; then
+	set_off
+else
+	set_on
+fi
